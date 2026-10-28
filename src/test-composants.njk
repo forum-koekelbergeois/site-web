@@ -1,0 +1,31 @@
+---
+layout: base.njk
+draft: true
+noindex: true
+permalink: /test-composants/
+title: Test des composants – Forum Koekelbergeois
+description: Page de travail interne, exclue de la production.
+---
+<div class="container">
+  <h1>Test des composants</h1>
+  <p>Page de travail, visible uniquement en local. Statuts calculés pour le {{ today }} (heure de Bruxelles), au moment de la construction.</p>
+
+  <h2>Fiches activité</h2>
+  {%- for activity in collections.activitiesByDate %}
+  {%- set s = activity.data | activityStatus(site) %}
+  <section class="test-card" aria-labelledby="fiche-{{ loop.index }}">
+    <h3 id="fiche-{{ loop.index }}">{{ activity.data.title }}</h3>
+    <p><span class="badge">{{ s.label }}</span>{% if activity.data.draft %} <span class="badge badge--draft">Brouillon</span>{% endif %}</p>
+    <dl class="test-list">
+      <dt>Fichier</dt><dd><code>{{ activity.inputPath }}</code></dd>
+      <dt>Date de début</dt><dd>{{ (activity.data.startDate | isoDate) or activity.data.startDate }}</dd>
+      <dt>Date de fin</dt><dd>{{ (activity.data.endDate | isoDate) or "—" }}</dd>
+      <dt>Statut de la fiche</dt><dd>{{ activity.data.status }}</dd>
+      <dt>Inscription</dt><dd>{{ activity.data.registration }}</dd>
+      <dt>Statut effectif</dt><dd>{{ s.status }}</dd>
+      <dt>Activité passée</dt><dd>{{ "oui" if s.past else "non" }}</dd>
+      <dt>Texte d’inscription (A2)</dt><dd>{{ s.text }}</dd>
+    </dl>
+  </section>
+  {%- endfor %}
+</div>

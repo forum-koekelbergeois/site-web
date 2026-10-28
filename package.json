@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "eleventy",
-    "start": "eleventy --serve"
+    "start": "eleventy --serve",
+    "test": "node --test \"test/*.test.js\""
   },
   "engines": {
     "node": ">=24"

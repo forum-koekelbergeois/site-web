@@ -6,21 +6,56 @@
   <meta name="color-scheme" content="light">
   <title>{{ title }}</title>
   <meta name="description" content="{{ description }}">
+  {%- if noindex %}
+  <meta name="robots" content="noindex">
+  {%- endif %}
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
   <meta property="og:title" content="{{ title }}">
-  <meta property="og:description" content="{{ description }}">
+  <meta property="og:description" content="{{ shareText or description }}">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.name }}">
   <meta property="og:locale" content="fr_BE">
-  <meta property="og:image" content="{{ site.url }}/assets/og-image.png">
-  <meta property="og:image:width" content="512">
-  <meta property="og:image:height" content="512">
-  <meta property="og:image:alt" content="Logo du Forum Koekelbergeois">
+  <meta property="og:image" content="{{ site.url }}{{ ogImage or '/assets/og-image.png' }}">
+  <meta property="og:image:alt" content="{{ ogImageAlt or 'Logo du Forum Koekelbergeois' }}">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-logo" href="/">
+        <img src="/assets/logo-forum-koekelbergeois.webp" width="240" height="134" alt="Forum Koekelbergeois, page d'accueil">
+      </a>
+      <nav class="site-nav" aria-label="Menu principal">
+        <ul>
+          {%- for item in navigation %}
+          <li><a href="{{ item.url }}"
+            {%- if page.url == item.url %} aria-current="page"
+            {%- elif item.url != "/" and page.url and page.url.startsWith(item.url) %} aria-current="true"
+            {%- endif %}>{{ item.label }}</a></li>
+          {%- endfor %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu" class="site-main" tabindex="-1">
 {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <ul class="container site-footer__list">
+      <li>{{ site.legalName }}</li>
+      <li><span class="sep" aria-hidden="true">·</span>{{ site.places.forum.address }}</li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="nowrap" href="{{ site.phone.href }}">{{ site.phone.display }}</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a href="mailto:{{ site.email.address }}">{{ site.email.address | replace("@", "@<wbr>") | safe }}</a></li>
+      <li><span class="sep" aria-hidden="true">·</span>Instagram&#32;<a href="{{ site.instagram.url }}">{{ site.instagram.handle }}</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a href="/mentions-legales/">Mentions légales et vie privée</a></li>
+    </ul>
+  </footer>
 </body>
 </html>
