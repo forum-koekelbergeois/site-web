@@ -1,0 +1,17 @@
+{
+  "name": "site-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website of Forum Koekelbergeois ASBL",
+  "type": "module",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.7"
+  }
+}
