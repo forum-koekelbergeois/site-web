@@ -6,7 +6,7 @@ import site from "./src/_data/site.js";
 
 // Added after the typography pass, so it is written with typographic characters.
 const MARKER_BANNER =
-  '<div class="marker-banner" role="note">Aperçu local : cette page contient des marqueurs [DONNÉE À COMPLÉTER] ou [À VÉRIFIER], ou des blocs provisoires. Elle ne pourra pas être publiée tant qu’ils restent.</div>';
+  '<div class="marker-banner" role="note">Aperçu local\u00A0: cette page contient des marqueurs [DONNÉE À COMPLÉTER] ou [À VÉRIFIER], ou des blocs provisoires. Elle ne pourra pas être publiée tant qu’ils restent.</div>';
 
 const isHtml = (outputPath) => typeof outputPath === "string" && outputPath.endsWith(".html");
 
