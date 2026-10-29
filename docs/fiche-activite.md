@@ -63,6 +63,10 @@ registrationPartnerContact: "02 427 75 42 ou info@3oeil.be"
 
 Dans ce cas, la page n'affiche ni le numéro du Forum ni le bouton « Laissez-nous un message » : seules les coordonnées du partenaire.
 
+## Adresse de la page
+
+L'adresse d'une fiche est formée de sa date de début (champ 4) et du nom du fichier sans date : `/activites/AAAA-MM-JJ-nom/`. Une activité qui revient chaque mois sous le même titre (la marche « Sport avec les mamans ») a ainsi une page par date, par exemple `/activites/2026-12-01-sport-avec-les-mamans/`. Tant que la date n'est pas remplie, l'adresse locale commence par `date-a-completer-`.
+
 ## Images par défaut des types
 
 Sans photo (champ 18), la page affiche l'image par défaut du type, qui sert aussi d'image de partage : Atelier IA5, Sortie IA6, Rencontre IA7, Cours IA8 (voir `src/_data/images.js`).
