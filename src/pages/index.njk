@@ -1,0 +1,147 @@
+---
+permalink: /
+title: Forum Koekelbergeois – Écoles de devoirs à Koekelberg
+eleventyComputed:
+  description: "Écoles de devoirs, ateliers pour les parents et cours de français pour adultes à Koekelberg. Découvrez nos activités et contactez-nous au {{ site.phone.display }}."
+shareText: "Aide aux devoirs, ateliers et cours de français à Koekelberg : découvrez le Forum Koekelbergeois et ses activités pour les familles."
+---
+{%- set forum = site.places.forum -%}
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <p class="eyebrow">Forum Koekelbergeois</p>
+      <h1>Écoles de devoirs et activités pour les familles à Koekelberg</h1>
+      <p class="lead">Depuis 2006, nous aidons les enfants à faire leurs devoirs et à progresser à l'école. Pour les adultes, nous proposons aussi des ateliers et des cours de français.</p>
+      <p><a class="button" href="/activites/">Voir les activités</a></p>
+      <p>Une question ? Appelez-nous au <strong>{% phoneLink %}</strong>, {{ site.phone.hours }}.</p>
+    </div>
+    {% comingPhoto "eager" %}
+  </div>
+</section>
+
+<section class="section container" aria-labelledby="qui-sommes-nous">
+  <h2 id="qui-sommes-nous">Qui sommes-nous ?</h2>
+  <p>Le Forum Koekelbergeois est une association (ASBL) de Koekelberg. Depuis 2006, nous accompagnons les enfants et les jeunes dans leur scolarité : aide aux devoirs, soutien quand l'école devient difficile, et un lieu calme pour travailler.</p>
+  <p>Nous croyons que la réussite d'un enfant se construit aussi avec sa famille. C'est pourquoi nous proposons des ateliers pour les parents et des moments de rencontre entre habitants du quartier.</p>
+  <p>Une petite équipe de salariés, aidée par de nombreux volontaires, vous accueille au {{ forum.street }} et à {{ site.places.jourdan.name }}, une résidence pour aînés où enfants et aînés se rencontrent.</p>
+  <p>Le Forum Koekelbergeois est agréé comme école de devoirs par l'ONE (Office de la Naissance et de l'Enfance). Il est aussi agréé par la COCOF pour son travail de cohésion sociale, c'est-à-dire pour créer du lien entre les habitants.</p>
+</section>
+
+<section class="section section--soft" aria-labelledby="nos-ecoles">
+  <div class="container">
+    <h2 id="nos-ecoles">Nos écoles de devoirs</h2>
+    <p>Après l'école, votre enfant fait ses devoirs dans le calme, accompagné par notre équipe et nos volontaires.</p>
+    {%- set cardTitles = {
+      primaire: "Primaire",
+      intergenerationnelle: "Intergénérationnelle : des rencontres entre les enfants et les résidents aînés",
+      secondaire: "Secondaire, avec des ateliers sur l'intelligence artificielle"
+    } %}
+    <ul class="cards">
+      {%- for school in site.homeworkSchools %}
+      {%- set place = site.places[school.place] %}
+      <li class="card">
+        {% comingPhoto %}
+        <div class="card__body">
+          <h3>{{ cardTitles[school.id] }}</h3>
+          <dl class="facts">
+            <div><dt>Pour qui</dt><dd>{{ school.audienceShort }}</dd></div>
+            <div><dt>Où</dt><dd>{% if place.name != site.name %}{{ place.name }}, {% endif %}{{ place.street }}</dd></div>
+          </dl>
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+    <p>Votre jeune est en 3e, 4e, 5e ou 6e secondaire ? Les ateliers coup de pouce, organisés avec le Service de Prévention, l'aident dans ses matières.</p>
+    <p>Nos écoles de devoirs sont très demandées : les nouvelles inscriptions passent souvent par une liste d'attente.</p>
+    <p><a class="more" href="/ecoles-de-devoirs/">Découvrir nos écoles de devoirs →</a></p>
+  </div>
+</section>
+
+<section class="section container" aria-labelledby="ateliers">
+  <h2 id="ateliers">Ateliers et activités pour les familles</h2>
+  <div class="split">
+    <div>
+      <p>Tout au long de l'année, nous proposons des ateliers ouverts à tous, pour apprendre des choses utiles au quotidien et rencontrer d'autres habitants du quartier. Par exemple : utiliser l'intelligence artificielle pour les devoirs ou les papiers, ou « Promenons-nous à Koekelberg », pour découvrir des sorties en famille à petit prix (la Basilique, le Belgian Chocolate Village, le Koekelberg historique…).</p>
+      <p><a class="more" href="/activites/">Voir les prochains ateliers →</a></p>
+
+      <h3>Sport avec les mamans</h3>
+      <p>Une balade, du mouvement et de la bonne humeur, entre femmes ! Un mardi matin par mois, nous marchons ensemble au départ de notre local du {{ forum.street }}.</p>
+      <p>Gratuit, réservé aux femmes, mamans ou non. L'inscription est conseillée, mais pas obligatoire : appelez-nous au <strong>{% phoneLink %}</strong> ou <a href="/contact/#formulaire">laissez-nous un message</a>.</p>
+
+      <h3>Cours de français pour adultes</h3>
+      <p>Gratuits et ouverts à tous, pour les adultes qui veulent apprendre ou améliorer leur français.</p>
+      <p>Le jeudi de 9h à 16h et le vendredi de 9h à 13h30, au {{ forum.street }}, avec l'ASBL Le Troisième Œil.</p>
+      <p>Pour vous inscrire, appelez-nous au <strong>{% phoneLink %}</strong> ou <a href="/contact/?demande={{ site.contactTopics.frenchClasses }}#formulaire">laissez-nous un message</a>. Vous pouvez aussi vous adresser au Troisième Œil : <a class="nowrap" href="tel:+3224277542">02 427 75 42</a> ou <a href="mailto:info@3oeil.be">info@3oeil.be</a>.</p>
+    </div>
+    {% comingPhoto %}
+  </div>
+</section>
+
+<section class="section section--soft" aria-labelledby="volontaire">
+  <div class="container split">
+    <div>
+      <h2 id="volontaire">Devenir volontaire</h2>
+      <p>Vous aimez transmettre et vous avez un peu de temps ? Rejoignez notre équipe de volontaires et aidez un enfant à reprendre confiance à l'école.</p>
+
+      <h3>Ce que vous ferez</h3>
+      <p>Accompagner les enfants et les jeunes pendant leurs devoirs, dans nos écoles de devoirs, en fin de journée en semaine ou le mercredi après-midi. Dans les ateliers coup de pouce, vous pouvez aussi aider des jeunes de la 3e à la 6e secondaire dans une matière que vous maîtrisez.</p>
+
+      <h3>Ce que nous vous demandons</h3>
+      <ul>
+        <li>Une présence par semaine, au minimum.</li>
+        <li>Un extrait de casier judiciaire (modèle 2), à demander à votre commune. Il est obligatoire pour travailler avec des enfants.</li>
+        <li>La signature d'une convention de volontariat et de notre règlement.</li>
+      </ul>
+      <p>Vous avez moins de 18 ans ? C'est possible, avec l'autorisation de vos parents.</p>
+
+      <h3>Ce que nous vous offrons</h3>
+      <p>Un défraiement, et les formations proposées par l'école de devoirs.</p>
+
+      <h3>Comment ça se passe</h3>
+      <ol>
+        <li>Vous nous laissez un message ou vous nous appelez.</li>
+        <li>Nous vous demandons votre CV, puis nous vous rencontrons au {{ forum.street }}, pendant environ une heure : un entretien et un court test écrit de niveau CEB, en français et en mathématiques.</li>
+        <li>Vous participez à une séance d'essai, puis nous choisissons ensemble votre créneau.</li>
+      </ol>
+      <p><a class="more" href="/contact/?demande={{ site.contactTopics.volunteer }}#formulaire">Proposer mon aide →</a></p>
+    </div>
+    {% comingPhoto %}
+  </div>
+</section>
+
+<section class="section container" aria-labelledby="partenaires">
+  <h2 id="partenaires">Partenaires et soutiens</h2>
+  <p>Nous travaillons avec des associations et des services du quartier pour proposer aux familles des activités variées.</p>
+
+  <h3>Nos partenaires</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th scope="col">Partenaire</th><th scope="col">Ce que nous faisons ensemble</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Commune de Koekelberg</td><td>Mise à disposition de notre local</td></tr>
+        <tr><td>CPAS de Koekelberg</td><td>Activités d'accompagnement psychologique, et soutien financier de l'école de devoirs intergénérationnelle</td></tr>
+        <tr><td>Service de Prévention de Koekelberg</td><td>Ateliers coup de pouce pour le secondaire</td></tr>
+        <tr><td>Jourdan Village</td><td>Mise à disposition du local de l'école de devoirs intergénérationnelle</td></tr>
+        <tr><td>La Scientothèque</td><td>Partage de savoir-faire pédagogique</td></tr>
+        <tr><td>Archipel 19</td><td>Ateliers culturels</td></tr>
+        <tr><td>Le Troisième Œil</td><td>Cours de français pour adultes</td></tr>
+        <tr><td>Quartier Jacquet dans sa Diversité</td><td>Ateliers interculturels</td></tr>
+        <tr><td>Volont'r</td><td>Recrutement de volontaires</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="logos-label">Réalisé avec le soutien de :</p>
+  {% logoList site.funders %}
+  <p class="logos-label">Agréé par :</p>
+  {% logoList [site.accreditation] %}
+</section>
+
+<section class="section section--soft" lang="nl" aria-labelledby="nederlands">
+  <div class="container">
+    <h2 id="nederlands">In het Nederlands</h2>
+    <p>Het Forum Koekelbergeois is een vzw in Koekelberg. Sinds 2006 helpen wij kinderen en jongeren met hun huiswerk en op school. Voor volwassenen organiseren wij ook workshops en lessen Frans. Onze activiteiten verlopen in het Frans. Vragen? Bel ons op {% phoneLink %}, van maandag tot vrijdag van 8.30 tot 18.30 uur.</p>
+  </div>
+</section>

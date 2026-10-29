@@ -1,0 +1,106 @@
+---
+permalink: /ecoles-de-devoirs/
+title: Écoles de devoirs à Koekelberg – Forum Koekelbergeois
+description: "Aide aux devoirs pour les enfants de la 1re primaire à la 2e secondaire, à Koekelberg. Horaires, lieux, participation et inscription sur liste d'attente."
+shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et les jeunes à Koekelberg : horaires, lieux et inscription."
+---
+{%- set intros = {
+  intergenerationnelle: "Les enfants font leurs devoirs dans une résidence pour aînés et y partagent des moments avec les résidents."
+} -%}
+<div class="container">
+  <h1>Nos écoles de devoirs</h1>
+  <p class="lead">Votre enfant a besoin d'un coup de main pour ses devoirs et ses leçons, ou d'un endroit calme pour travailler ? Nos écoles de devoirs l'accueillent après l'école, pendant toute l'année scolaire, avec notre équipe et nos volontaires.</p>
+
+  <div class="cards cards--plain">
+    {%- for school in site.homeworkSchools %}
+    {%- set place = site.places[school.place] %}
+    <section class="card" aria-labelledby="ecole-{{ school.id }}">
+      <div class="card__body">
+        <h2 id="ecole-{{ school.id }}">{{ school.name }}</h2>
+        {%- if intros[school.id] %}
+        <p>{{ intros[school.id] }}</p>
+        {%- endif %}
+        <ul class="details">
+          <li><strong>Pour qui</strong> : {{ school.audience }} ({{ school.places }} places)</li>
+          <li><strong>Quand</strong> : {{ school.schedule }}</li>
+          <li><strong>Où</strong> : {% if place.name != site.name %}{{ place.name }}, {% endif %}{{ place.street }}, {{ place.city }}</li>
+          <li><strong>Participation</strong> : {{ school.fee }}</li>
+        </ul>
+      </div>
+    </section>
+    {%- endfor %}
+  </div>
+
+  <section class="section" aria-labelledby="secondaire">
+    <h2 id="secondaire">Pour les jeunes du secondaire</h2>
+    <p>En plus de l'aide aux devoirs, les jeunes de l'école de devoirs secondaire participent à deux activités, de septembre à fin mai. Elles sont comprises dans la participation de {{ site.homeworkFee }} et font partie du programme pour tous les inscrits.</p>
+
+    <h3>Ateliers sur l'intelligence artificielle</h3>
+    <p>Les jeunes apprennent à se servir de l'intelligence artificielle pour comprendre leurs devoirs, sans qu'elle fasse le travail à leur place. Ils expliquent d'abord où ils bloquent, posent ensuite une question précise, puis terminent l'exercice seuls, dans leur cahier. Ils découvrent aussi comment fonctionne l'intelligence artificielle, comment repérer ses erreurs et les fausses images, et comment vérifier une information trouvée en ligne.</p>
+    <p>Le mercredi, de 14h à 17h. Une autorisation des parents est demandée.</p>
+
+    <h3>Groupe de parole</h3>
+    <p>Un moment pour parler de ce qui les préoccupe : l'actualité, les réseaux sociaux, les relations, le harcèlement… Une psychologue et un animateur l'animent dans un climat de confiance et de respect, à l'aide d'images ou de jeux d'improvisation. Chaque séance se termine sur ce que chacun peut faire, à son niveau.</p>
+    <p>Un mardi par mois, de 16h à 18h.</p>
+  </section>
+
+  <section class="section" aria-labelledby="au-dela">
+    <h2 id="au-dela">Au-delà des devoirs</h2>
+    <p>L'école de devoirs, c'est aussi un lieu de vie. Les activités ci-dessous sont réservées aux enfants inscrits et à leurs familles.</p>
+
+    <h3>Le mercredi après-midi</h3>
+    <p>Un temps plus créatif et culturel : bricolage, sciences, jeux de société, cuisine, découverte du quartier… À l'école de devoirs intergénérationnelle, les enfants partagent aussi chaque mois une activité avec les résidents de {{ site.places.jourdan.name }}.</p>
+
+    <h3>Pendant les vacances</h3>
+    <p>Des stages à thème, avec des visites et des sorties. Par exemple : une semaine sur les moyens de transport, un stage sur le sport, ou des révisions avant le CE1D pour les jeunes de 2e secondaire.</p>
+
+    <h3>En famille</h3>
+    <p>Chaque année, une grande sortie réunit les parents, les enfants et l'équipe, comme à Technopolis ou à Pairi Daiza. Tout au long de l'année, les parents sont aussi invités à des ateliers cuisine, des goûters ou des jeux avec leurs enfants.</p>
+
+    <p>La participation de {{ site.homeworkFee }} aide à financer ces activités.</p>
+
+    <div class="gallery">
+      {% comingPhoto %}
+      {% comingPhoto %}
+      {% comingPhoto %}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="inscription">
+    <h2 id="inscription">Comment inscrire votre enfant</h2>
+
+    <h3>1. Contactez-nous</h3>
+    <p>Appelez-nous au <strong>{% phoneLink %}</strong>, {{ site.phone.hours }}, ou laissez-nous un message. Nous vous répondons {{ site.email.replyDelay }}.</p>
+
+    <h3>2. La liste d'attente</h3>
+    <p>Nos écoles de devoirs sont très demandées et souvent complètes. Nous inscrivons votre enfant sur la liste d'attente et nous vous recontactons dès qu'une place se libère. Vous pouvez demander une inscription à tout moment de l'année : dès qu'une place se libère, nous la proposons tout de suite à une famille de la liste.</p>
+
+    <h3>3. Quand une place se libère</h3>
+    <p>Nous vous invitons, vous et votre enfant, à une rencontre. Nous vous présentons nos activités, puis nous faisons connaissance : comment se passe l'école, ce qui lui pose difficulté, ce qu'il aime faire. Ensuite, nous remplissons ensemble la fiche d'inscription, et vous signez le règlement et l'autorisation de droit à l'image. La participation de {{ site.homeworkFee }} est demandée à ce moment-là (l'école de devoirs intergénérationnelle est gratuite).</p>
+    <p>À apporter : le dernier bulletin de votre enfant, votre carte d'identité et celle de votre enfant, et une vignette de mutuelle.</p>
+
+    <h3>Qui peut s'inscrire ?</h3>
+    <p>Les enfants qui habitent Koekelberg ou qui y vont à l'école.</p>
+
+    <h3>Ce que nous attendons de vous et de votre enfant</h3>
+    <ul>
+      <li>Venir régulièrement, au moins une séance sur deux, pour garder sa place, et prévenir en cas d'absence.</li>
+      <li>Apporter son journal de classe, ses cours et son matériel, même les jours sans devoirs.</li>
+      <li>Participer aux réunions de parents.</li>
+      <li>Si votre enfant est inscrit à une sortie ou à un stage et ne vient pas sans certificat médical, les frais engagés devront être remboursés.</li>
+    </ul>
+
+    <p><a class="button" href="/contact/?demande={{ site.contactTopics.homework }}#formulaire">Laissez-nous un message</a></p>
+  </section>
+
+  <section class="section" aria-labelledby="coup-de-pouce">
+    <h2 id="coup-de-pouce">Après la 2e secondaire : les ateliers coup de pouce</h2>
+    <p>Votre jeune est en 3e, 4e, 5e ou 6e secondaire et bloque dans une matière ? Aux ateliers coup de pouce, il vient avec ses questions. Des volontaires qui connaissent bien la matière l'aident, seul à seul ou en petit groupe. Les ateliers sont organisés par le Service de Prévention de Koekelberg et le Forum Koekelbergeois, et encadrés par les médiateurs scolaires du Service de Prévention.</p>
+    <ul class="details">
+      <li><strong>Pour qui</strong> : les jeunes de la 3e à la 6e secondaire qui habitent Koekelberg ou y vont à l'école</li>
+      <li><strong>Quand et où</strong> : le mercredi de 14h à 17h à l'Institut des Ursulines (71 rue Jules Debecker), et le samedi de 10h à 13h au Service de Prévention (118 rue de l'Église Sainte-Anne)</li>
+      <li><strong>Participation</strong> : gratuit</li>
+      <li><strong>Inscription</strong> : auprès du Service de Prévention de Koekelberg, au <a class="nowrap" href="tel:+3224356809">02 435 68 09</a> ou à <a href="mailto:pprevention@koekelberg.brussels">pprevention@<wbr>koekelberg.brussels</a></li>
+    </ul>
+  </section>
+</div>

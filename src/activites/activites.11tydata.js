@@ -1,11 +1,16 @@
 import { DEFAULTS, assertValidActivity } from "../../lib/activity-schema.js";
 import { isProduction } from "../../lib/markers.js";
 
-// Activity pages are built in task 4.3; for now the files only feed the collection.
 export default {
   ...DEFAULTS,
   tags: ["activities"],
-  permalink: false,
+  layout: "activity.njk",
+  // The full file name (date included) keeps monthly activities with the same title apart.
+  permalink: (data) => `/activites/${data.page.inputPath.split("/").pop().replace(/\.md$/, "")}/`,
+  eleventyComputed: {
+    metaTitle: (data) => `${data.title} – Forum Koekelbergeois`,
+    description: (data) => data.summary,
+  },
   eleventyDataSchema(data) {
     assertValidActivity(data, { production: isProduction() });
   },

@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>{{ title }}</title>
+  <title>{{ metaTitle or title }}</title>
   <meta name="description" content="{{ description }}">
   {%- if noindex %}
   <meta name="robots" content="noindex">
   {%- endif %}
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
-  <meta property="og:title" content="{{ title }}">
+  <meta property="og:title" content="{{ metaTitle or title }}">
   <meta property="og:description" content="{{ shareText or description }}">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:type" content="website">
@@ -53,7 +53,7 @@
       <li><span class="sep" aria-hidden="true">·</span>{{ site.places.forum.address }}</li>
       <li><span class="sep" aria-hidden="true">·</span><a class="nowrap" href="{{ site.phone.href }}">{{ site.phone.display }}</a></li>
       <li><span class="sep" aria-hidden="true">·</span><a href="mailto:{{ site.email.address }}">{{ site.email.address | replace("@", "@<wbr>") | safe }}</a></li>
-      <li><span class="sep" aria-hidden="true">·</span>Instagram&#32;<a href="{{ site.instagram.url }}">{{ site.instagram.handle }}</a></li>
+      <li><span class="sep" aria-hidden="true">·</span>Instagram&nbsp;<a href="{{ site.instagram.url }}">{{ site.instagram.handle }}</a></li>
       <li><span class="sep" aria-hidden="true">·</span><a href="/mentions-legales/">Mentions légales et vie privée</a></li>
     </ul>
   </footer>

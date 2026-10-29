@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import site from "../src/_data/site.js";
-import { findBlockingMarkers } from "../lib/markers.js";
+import { findBlockingMarkers, describeBlockingMarkers, findPlaceholders } from "../lib/markers.js";
 
 test("homework fee is defined once and shared", () => {
   const paying = site.homeworkSchools.filter((s) => s.id !== "intergenerationnelle");
@@ -34,4 +34,16 @@ test("blocking markers are detected, [À VENIR] is allowed", () => {
   assert.deepEqual(findBlockingMarkers("a [DONNÉE À COMPLÉTER pour chaque mardi] b"), ["[DONNÉE À COMPLÉTER pour chaque mardi]"]);
   assert.deepEqual(findBlockingMarkers("[À VÉRIFIER : garanties]"), ["[À VÉRIFIER : garanties]"]);
   assert.deepEqual(findBlockingMarkers("[À VENIR] [PROPOSITION À VALIDER]"), []);
+});
+
+test("blocking markers are described with their context", () => {
+  const html = '<meta name="description" content="[DONNÉE À COMPLÉTER]"><p><em>Dernière mise à jour : [DONNÉE À COMPLÉTER]</em></p>';
+  assert.deepEqual(describeBlockingMarkers(html), [
+    "[DONNÉE À COMPLÉTER] (métadonnées : description)",
+    "[DONNÉE À COMPLÉTER] (après « …Dernière mise à jour : »)",
+  ]);
+});
+
+test("placeholder blocks are detected", () => {
+  assert.deepEqual(findPlaceholders('<div data-placeholder="Formulaire : tâche 4.5">x</div>'), ["Formulaire : tâche 4.5"]);
 });

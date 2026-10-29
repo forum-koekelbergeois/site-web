@@ -1,0 +1,61 @@
+---
+permalink: /contact/
+title: Contact – Forum Koekelbergeois
+eleventyComputed:
+  description: "Appelez-nous au {{ site.phone.display }}, {{ site.phone.hours }}, écrivez-nous ou laissez-nous un message. Forum Koekelbergeois, {{ site.places.forum.street }}."
+shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-nous ou laissez-nous un message."
+---
+{%- set placeActivities = {
+  forum: "Écoles de devoirs primaire et secondaire, ateliers, cours de français. C'est aussi notre adresse postale.",
+  jourdan: "École de devoirs intergénérationnelle"
+} -%}
+<div class="container">
+  <h1>Contactez-nous</h1>
+  <p class="lead">Une question sur nos écoles de devoirs ou nos activités ? Nous sommes là pour vous répondre.</p>
+
+  <section class="section" aria-labelledby="par-telephone">
+    <h2 id="par-telephone">Par téléphone</h2>
+    <p><strong>{% phoneLink %}</strong>, {{ site.phone.hours }}.</p>
+  </section>
+
+  <section class="section" aria-labelledby="par-message">
+    <h2 id="par-message">Par message</h2>
+    <p>Remplissez le formulaire ci-dessous : nous vous répondons {{ site.email.replyDelay }}.</p>
+    <div class="placeholder-block" id="formulaire" tabindex="-1" data-placeholder="Formulaire : tâche 4.5">
+      <p>Formulaire : tâche 4.5</p>
+    </div>
+    <p class="small">Nous utilisons vos informations uniquement pour répondre à votre demande. En savoir plus : <a class="more" href="/mentions-legales/#vie-privee">Vie privée →</a></p>
+  </section>
+
+  <section class="section" aria-labelledby="par-email">
+    <h2 id="par-email">Par e-mail</h2>
+    <p><a href="mailto:{{ site.email.address }}">{{ site.email.address | replace("@", "@<wbr>") | safe }}</a></p>
+  </section>
+
+  <section class="section" aria-labelledby="nos-lieux">
+    <h2 id="nos-lieux">Nos lieux</h2>
+    <div class="cards cards--plain">
+      {%- for id, place in site.places %}
+      <section class="card" aria-labelledby="lieu-{{ id }}">
+        <div class="card__body">
+          <h3 id="lieu-{{ id }}">{{ place.name }}</h3>
+          <dl class="facts">
+            <div><dt>Adresse</dt><dd>{{ place.address }}</dd></div>
+            <div><dt>Ce qui s'y passe</dt><dd>{{ placeActivities[id] }}</dd></div>
+          </dl>
+          <p><a class="more" href="{{ place.mapUrl }}">Voir sur la carte<span class="visually-hidden"> : {{ place.name }}</span></a></p>
+        </div>
+      </section>
+      {%- endfor %}
+    </div>
+    <p>Nous recevons les familles uniquement sur rendez-vous : appelez-nous ou <a href="#formulaire">laissez-nous un message</a> pour en convenir.</p>
+  </section>
+
+  <section class="section" aria-labelledby="reseaux">
+    <h2 id="reseaux">Sur les réseaux</h2>
+    <ul>
+      <li>Instagram : <a href="{{ site.instagram.url }}">{{ site.instagram.handle }}</a></li>
+      <li>Notre groupe Facebook est privé : il est réservé aux familles inscrites, et l'accès se fait sur demande.</li>
+    </ul>
+  </section>
+</div>

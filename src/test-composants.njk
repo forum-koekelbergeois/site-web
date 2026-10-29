@@ -18,6 +18,7 @@ description: Page de travail interne, exclue de la production.
     <p><span class="badge">{{ s.label }}</span>{% if activity.data.draft %} <span class="badge badge--draft">Brouillon</span>{% endif %}</p>
     <dl class="test-list">
       <dt>Fichier</dt><dd><code>{{ activity.inputPath }}</code></dd>
+      <dt>Page</dt><dd><a href="{{ activity.url }}">{{ activity.url }}</a></dd>
       <dt>Date de début</dt><dd>{{ (activity.data.startDate | isoDate) or activity.data.startDate }}</dd>
       <dt>Date de fin</dt><dd>{{ (activity.data.endDate | isoDate) or "—" }}</dd>
       <dt>Statut de la fiche</dt><dd>{{ activity.data.status }}</dd>

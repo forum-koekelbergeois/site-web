@@ -90,17 +90,32 @@ export default {
     },
   ],
 
-  // Logo files arrive in task 4.3; paths are placeholders until then.
+  // Logos: WebP files at 2x display size (scripts/process_logos.py). The alt
+  // text is the name, as written on the home page. width/height are the file size.
   funders: [
-    { name: "COCOF", logo: "/assets/logos/cocof.webp" },
-    { name: "Fédération Wallonie-Bruxelles", logo: "/assets/logos/fwb.webp" },
-    { name: "urban.brussels (CQD)", logo: "/assets/logos/urban-brussels.webp" },
-    { name: "perspective.brussels", logo: "/assets/logos/perspective-brussels.webp" },
-    { name: "Commune de Koekelberg", logo: "/assets/logos/commune-koekelberg.webp" },
+    { name: "COCOF", logo: "/assets/logos/cocof.webp", width: 252, height: 140 },
+    { name: "Fédération Wallonie-Bruxelles", logo: "/assets/logos/fwb.webp", width: 128, height: 128 },
+    { name: "urban.brussels (CQD)", logo: "/assets/logos/urban-brussels.webp", width: 229, height: 128 },
+    { name: "perspective.brussels", logo: "/assets/logos/perspective-brussels.webp", width: 476, height: 112 },
+    { name: "Commune de Koekelberg", logo: "/assets/logos/commune-koekelberg.webp", width: 168, height: 196 },
   ],
 
   accreditation: {
     name: "ONE (Office de la Naissance et de l'Enfance)",
     logo: "/assets/logos/one.webp",
+    width: 182,
+    height: 128,
   },
+
+  // Topics of the contact form (annex C), used in prefill links (task 4.5).
+  contactTopics: {
+    activity: "activite",
+    homework: "ecole-de-devoirs",
+    frenchClasses: "cours-de-francais",
+    volunteer: "volontaire",
+  },
+
+  // "Dernière mise à jour" of the privacy page, e.g. "15 novembre 2026".
+  // Empty until the site goes live: the page then shows a blocking marker.
+  privacyUpdated: "",
 };

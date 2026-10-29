@@ -1,0 +1,78 @@
+---
+layout: base.njk
+---
+{#- Activity page (content section 4). The status is computed at build time;
+    task 4.4 adds the script that updates it every day in the browser. -#}
+{%- set data = {
+  startDate: startDate, endDate: endDate, status: status, registration: registration,
+  registrationPartner: registrationPartner, registrationDeadline: registrationDeadline
+} -%}
+{%- set s = data | activityStatus(site) -%}
+{%- set place = { venue: venue, venueAddress: venueAddress } | activityPlace -%}
+{%- set prefill = "Inscription : " + title + " (" + (startDate | shortDate) + ")" -%}
+{%- set phoneHtml = '<a class="nowrap" href="' + site.phone.href + '">' + site.phone.display + '</a>' -%}
+<article class="container activity">
+  <header class="activity__header">
+    {%- if photo %}
+    <img class="photo" src="{{ photo }}" width="1200" height="630" alt="{{ photoAlt }}">
+    {%- else %}
+    {% comingPhoto "eager" %}
+    {%- endif %}
+    <p><span class="badge">{{ type }}</span></p>
+    <h1>{{ title }}</h1>
+    <p class="lead">Pour qui : {{ audience }}</p>
+  </header>
+
+  <dl class="facts facts--inline">
+    <div><dt>Quand</dt><dd>{{ schedule }}</dd></div>
+    <div><dt>Où</dt><dd>
+      {%- if place.name %}{{ place.name }}, {% endif %}{{ place.address }}<br>
+      <a href="{{ place.mapUrl }}">Voir sur la carte<span class="visually-hidden"> : {{ place.name or place.address }}</span></a>
+    </dd></div>
+    <div><dt>Prix</dt><dd>{{ "Gratuit" if free else price }}</dd></div>
+  </dl>
+  {%- if places or registrationDeadline %}
+  <ul class="details">
+    {%- if places %}<li>Places limitées ({{ places }})</li>{% endif %}
+    {%- if registrationDeadline %}<li>Inscription jusqu'au {{ registrationDeadline | frenchDate }}</li>{% endif %}
+  </ul>
+  {%- endif %}
+
+  <div class="registration">
+    {%- if s.past %}
+    <p>Cette activité est terminée. <a class="more" href="/activites/">Découvrez nos prochaines activités →</a></p>
+    {%- elif s.status == "Entrée libre" %}
+    <p>{{ s.text }}</p>
+    <p>Une question ? Appelez-nous au <strong>{{ phoneHtml | safe }}</strong>.</p>
+    {%- elif s.status == "Clôturé" %}
+    <p>{{ s.text | escape | replace("Découvrez nos autres activités", '<a href="/activites/">Découvrez nos autres activités</a>') | safe }}</p>
+    {%- elif registration == "Chez un partenaire" %}
+    <p>{{ s.text }}</p>
+    {%- else %}
+    <p>{{ s.text | escape | replace(site.phone.display, "<strong>" + phoneHtml + "</strong>") | safe }}</p>
+    <p class="actions">
+      {%- if s.status != "Ouvert" %}
+      <a class="button button--secondary" href="{{ site.phone.href }}">{{ site.phone.display }}</a>
+      {%- endif %}
+      <a class="button" href="/contact/?demande={{ site.contactTopics.activity }}&amp;activite={{ prefill | urlencode }}#formulaire">Laissez-nous un message</a>
+    </p>
+    {%- endif %}
+  </div>
+
+  {%- if content | trim %}
+  <div class="prose">
+    {{ content | safe }}
+  </div>
+  {%- endif %}
+
+  {%- if organizedWith %}
+  <p>Organisé avec {{ organizedWith }}</p>
+  {%- endif %}
+
+  {%- if funders and funders.length %}
+  <p class="logos-label">Réalisé avec le soutien de</p>
+  {% logoList funders | fundersByName %}
+  {%- endif %}
+
+  <p><a href="/activites/">← Toutes nos activités</a></p>
+</article>

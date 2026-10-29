@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { typographyHtml, typographyText } from "../lib/typography.js";
 
-const NBSP = " ";
-const NNBSP = " ";
+const NBSP = "\u00A0";
+const NNBSP = "\u202F";
 
 test("straight apostrophes become typographic", () => {
   assert.equal(typographyText("l'école d'Anne"), "l’école d’Anne");
@@ -48,13 +48,68 @@ test("URLs and e-mail addresses are left intact", () => {
   assert.equal(typographyText("o'brien@exemple.be"), "o'brien@exemple.be");
 });
 
-test("HTML attributes are never changed", () => {
-  const html = `<a href="https://exemple.be/?a=1&b='x'" title="Qui ? l'IA : oui">l'IA ?</a>`;
+test("technical attributes are never changed", () => {
+  const html = `<a href="https://exemple.be/?a=1&b='x'" title="Qui ? l'IA : oui" class="a:b">l'IA ?</a>`;
   assert.equal(
     typographyHtml(html),
-    `<a href="https://exemple.be/?a=1&b='x'" title="Qui ? l'IA : oui">l’IA${NNBSP}?</a>`,
+    `<a href="https://exemple.be/?a=1&b='x'" title="Qui ? l'IA : oui" class="a:b">l’IA${NNBSP}?</a>`,
   );
-  assert.equal(typographyHtml('<img alt="l\'IA : test">'), '<img alt="l\'IA : test">');
+  assert.equal(
+    typographyHtml('<meta property="og:url" content="https://exemple.be/l\'IA?x=1">'),
+    '<meta property="og:url" content="https://exemple.be/l\'IA?x=1">',
+  );
+  assert.equal(
+    typographyHtml('<meta name="viewport" content="width=device-width, initial-scale=1">'),
+    '<meta name="viewport" content="width=device-width, initial-scale=1">',
+  );
+});
+
+test("alt and aria-label texts are corrected", () => {
+  assert.equal(typographyHtml('<img src="/a\'b.webp" alt="l\'IA : test">'), `<img src="/a'b.webp" alt="l’IA${NBSP}: test">`);
+  assert.equal(typographyHtml("<img alt='Qui ?'>"), `<img alt='Qui${NNBSP}?'>`);
+  assert.equal(typographyHtml('<img alt="">'), '<img alt="">');
+  assert.equal(
+    typographyHtml('<nav aria-label="Menu de l&#39;association : principal">x</nav>'),
+    `<nav aria-label="Menu de l’association${NBSP}: principal">x</nav>`,
+  );
+});
+
+test("meta description and Open Graph texts are corrected", () => {
+  assert.equal(
+    typographyHtml('<meta name="description" content="Aide aux devoirs : l&#39;école ?">'),
+    `<meta name="description" content="Aide aux devoirs${NBSP}: l’école${NNBSP}?">`,
+  );
+  assert.equal(
+    typographyHtml('<meta property="og:title" content="L\'IA : mon quotidien">'),
+    `<meta property="og:title" content="L’IA${NBSP}: mon quotidien">`,
+  );
+  assert.equal(
+    typographyHtml('<meta property="og:description" content="Appelez-nous au 02 435 68 45, de 8h30 à 18h30 !">'),
+    `<meta property="og:description" content="Appelez-nous au 02 435 68 45, de 8h30 à 18h30${NNBSP}!">`,
+  );
+  assert.equal(
+    typographyHtml('<meta content="L\'IA : x" property="og:image:alt">'),
+    `<meta content="L’IA${NBSP}: x" property="og:image:alt">`,
+  );
+});
+
+test("URLs and e-mails inside readable attributes are left intact", () => {
+  assert.equal(
+    typographyHtml('<a aria-label="Écrire à o\'brien@exemple.be : ok" href="mailto:o\'brien@exemple.be">x</a>'),
+    `<a aria-label="Écrire à o'brien@exemple.be${NBSP}: ok" href="mailto:o'brien@exemple.be">x</a>`,
+  );
+  assert.equal(
+    typographyHtml('<img alt="Voir https://www.openstreetmap.org/search?query=a">'),
+    '<img alt="Voir https://www.openstreetmap.org/search?query=a">',
+  );
+});
+
+test("attributes in Dutch are left intact", () => {
+  assert.equal(
+    typographyHtml('<p lang="nl"><img alt="Vragen? Bel ons"> <a aria-label="Info: hier">x</a></p>'),
+    '<p lang="nl"><img alt="Vragen? Bel ons"> <a aria-label="Info: hier">x</a></p>',
+  );
+  assert.equal(typographyHtml('<img lang="nl" alt="Vragen?">'), '<img lang="nl" alt="Vragen?">');
 });
 
 test("tel: and mailto: links are left intact", () => {

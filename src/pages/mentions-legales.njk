@@ -1,0 +1,29 @@
+---
+permalink: /mentions-legales/
+title: Mentions légales et vie privée – Forum Koekelbergeois
+description: "Qui édite ce site, quelles informations nous recueillons par le formulaire de contact, combien de temps nous les gardons et comment exercer vos droits."
+---
+{%- set forum = site.places.forum -%}
+<div class="container prose">
+  <h1>Mentions légales et vie privée</h1>
+
+  <section class="section" aria-labelledby="mentions-legales">
+    <h2 id="mentions-legales">Mentions légales</h2>
+    <p>Ce site est édité par :</p>
+    <p>
+      <strong>{{ site.legalName }}</strong><br>
+      Siège : {{ forum.address }}<br>
+      Numéro d'entreprise : {{ site.companyNumber }}, {{ site.companyRegister }}<br>
+      E-mail : <a href="mailto:{{ site.email.address }}">{{ site.email.address | replace("@", "@<wbr>") | safe }}</a><br>
+      Téléphone : {% phoneLink %}<br>
+      Site : <a href="{{ site.url }}/">{{ site.url | replace("https://", "") }}</a>
+    </p>
+    <p><strong>Hébergement</strong> : Netlify, Inc. (États-Unis)</p>
+    <p><strong>Textes et photos</strong> : © {{ site.legalName }}, sauf mention contraire. Les photos ne peuvent pas être reproduites sans notre accord. Les logos appartiennent à leurs propriétaires respectifs.</p>
+  </section>
+
+  <section class="section" id="vie-privee" tabindex="-1" aria-labelledby="vie-privee-titre">
+    <h2 id="vie-privee-titre">Vie privée</h2>
+    {% renderFile "./src/_includes/legal/vie-privee.md", { site: site } %}
+  </section>
+</div>
