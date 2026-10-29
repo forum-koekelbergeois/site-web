@@ -1,12 +1,18 @@
+import { existsSync } from "node:fs";
 import { RenderPlugin } from "@11ty/eleventy";
 import { describeStatus, todayInBrussels, toIsoDate } from "./lib/activity-status.js";
 import { describeBlockingMarkers, findPlaceholders, isProduction } from "./lib/markers.js";
 import { typographyHtml } from "./lib/typography.js";
+import { imageHtml, findMissingImages, findMissingReferences } from "./lib/images.js";
+import { linkContacts } from "./lib/contact-links.js";
+import images from "./src/_data/images.js";
 import site from "./src/_data/site.js";
 
 // Added after the typography pass, so it is written with typographic characters.
 const MARKER_BANNER =
-  '<div class="marker-banner" role="note">Aperçu local\u00A0: cette page contient des marqueurs [DONNÉE À COMPLÉTER] ou [À VÉRIFIER], ou des blocs provisoires. Elle ne pourra pas être publiée tant qu’ils restent.</div>';
+  '<div class="marker-banner" role="note">Aperçu local\u00A0: cette page contient des marqueurs [DONNÉE À COMPLÉTER] ou [À VÉRIFIER], des blocs provisoires ou des images manquantes. Elle ne pourra pas être publiée tant qu’ils restent.</div>';
+
+const fileExists = (publicPath) => existsSync(`src${publicPath}`);
 
 const isHtml = (outputPath) => typeof outputPath === "string" && outputPath.endsWith(".html");
 
@@ -91,11 +97,23 @@ export default function (eleventyConfig) {
     return `<ul class="logos">${items.join("")}</ul>`;
   });
 
-  eleventyConfig.addShortcode(
-    "comingPhoto",
-    (loading = "lazy") =>
-      `<img class="photo" src="/assets/placeholder.svg" width="1200" height="800" alt="" loading="${loading}">`,
-  );
+  // Image slot by code (src/_data/images.js): placeholder until the file exists.
+  eleventyConfig.addShortcode("image", (code, options = {}) => {
+    const image = images.byCode[code];
+    if (!image) throw new Error(`Image inconnue : ${code} (voir src/_data/images.js)`);
+    return imageHtml(image, { ...options, exists: fileExists(image.file) });
+  });
+
+  // Photo of an activity (fields 18 and 19), or the default image of its type.
+  eleventyConfig.addShortcode("activityImage", (data, options = {}) => {
+    const known = images.list.find((i) => i.file === data.photo);
+    const image = data.photo
+      ? { ...(known ?? { code: "photo de la fiche", file: data.photo, width: 1536, height: 1024 }), alt: data.photoAlt }
+      : images.byCode[images.typeDefaults[data.type]];
+    return imageHtml(image, { ...options, exists: fileExists(image.file) });
+  });
+
+  eleventyConfig.addFilter("linkContacts", linkContacts);
 
   eleventyConfig.addTransform("typography", function (content) {
     if (!isHtml(this.page.outputPath)) return content;
@@ -108,6 +126,10 @@ export default function (eleventyConfig) {
     const found = [
       ...describeBlockingMarkers(content),
       ...findPlaceholders(content).map((p) => `bloc provisoire « ${p} »`),
+      ...findMissingImages(content).map((i) => `image manquante ${i}`),
+      ...findMissingReferences(content, fileExists)
+        .filter((path) => !content.includes(`(${path})`))
+        .map((path) => `image manquante (${path}), image de partage`),
     ];
     if (found.length === 0) return content;
     if (production) {
@@ -126,7 +148,7 @@ export default function (eleventyConfig) {
     ]);
     blocking.length = 0;
     throw new Error(
-      "\n\nMise en ligne impossible : ces pages contiennent encore des marqueurs ou des blocs provisoires.\n" +
+      "\n\nMise en ligne impossible : ces pages contiennent encore des marqueurs, des blocs provisoires ou des images manquantes.\n" +
         `${lines.join("\n")}\n` +
         "Complétez ou retirez-les, puis relancez la construction.\n",
     );

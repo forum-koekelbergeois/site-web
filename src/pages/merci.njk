@@ -2,13 +2,15 @@
 permalink: /merci/
 noindex: true
 title: Message envoyé – Forum Koekelbergeois
-description: "[DONNÉE À COMPLÉTER]"
+eleventyComputed:
+  description: "Votre message a bien été envoyé au Forum Koekelbergeois. Nous vous répondons {{ site.email.replyDelay }}."
 ---
 <div class="container prose">
   <h1>Merci, votre message est bien envoyé !</h1>
   <p class="lead">Nous vous répondons {{ site.email.replyDelay }}, par téléphone, SMS, WhatsApp ou e-mail.</p>
   <p>Ce message ne vaut pas inscription : votre place est confirmée quand nous vous avons répondu.</p>
   <p>C'est urgent ? Appelez-nous au <strong>{% phoneLink %}</strong>, {{ site.phone.hours }}.</p>
+  {% image "IA11", { className: "photo--decor" } %}
   <ul class="link-list">
     <li><a class="more" href="/activites/">Voir nos activités →</a></li>
     <li><a class="more" href="/">Retour à l'accueil →</a></li>

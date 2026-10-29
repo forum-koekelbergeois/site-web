@@ -23,7 +23,7 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
         <ul class="details">
           <li><strong>Pour qui</strong> : {{ school.audience }} ({{ school.places }} places)</li>
           <li><strong>Quand</strong> : {{ school.schedule }}</li>
-          <li><strong>Où</strong> : {% if place.name != site.name %}{{ place.name }}, {% endif %}{{ place.street }}, {{ place.city }}</li>
+          <li><strong>Où</strong> : {% if place.name != site.name %}{{ place.name }}, {{ place.street }}{% else %}{{ place.streetLine }}{% endif %}, {{ place.city }}</li>
           <li><strong>Participation</strong> : {{ school.fee }}</li>
         </ul>
       </div>
@@ -37,6 +37,7 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
 
     <h3>Ateliers sur l'intelligence artificielle</h3>
     <p>Les jeunes apprennent à se servir de l'intelligence artificielle pour comprendre leurs devoirs, sans qu'elle fasse le travail à leur place. Ils expliquent d'abord où ils bloquent, posent ensuite une question précise, puis terminent l'exercice seuls, dans leur cahier. Ils découvrent aussi comment fonctionne l'intelligence artificielle, comment repérer ses erreurs et les fausses images, et comment vérifier une information trouvée en ligne.</p>
+    {% image "R5", { className: "photo--medium" } %}
     <p>Le mercredi, de 14h à 17h. Une autorisation des parents est demandée.</p>
 
     <h3>Groupe de parole</h3>
@@ -50,20 +51,17 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
 
     <h3>Le mercredi après-midi</h3>
     <p>Un temps plus créatif et culturel : bricolage, sciences, jeux de société, cuisine, découverte du quartier… À l'école de devoirs intergénérationnelle, les enfants partagent aussi chaque mois une activité avec les résidents de {{ site.places.jourdan.name }}.</p>
+    {% image "R6", { className: "photo--small" } %}
 
     <h3>Pendant les vacances</h3>
     <p>Des stages à thème, avec des visites et des sorties. Par exemple : une semaine sur les moyens de transport, un stage sur le sport, ou des révisions avant le CE1D pour les jeunes de 2e secondaire.</p>
+    {% image "R7", { className: "photo--medium" } %}
 
     <h3>En famille</h3>
     <p>Chaque année, une grande sortie réunit les parents, les enfants et l'équipe, comme à Technopolis ou à Pairi Daiza. Tout au long de l'année, les parents sont aussi invités à des ateliers cuisine, des goûters ou des jeux avec leurs enfants.</p>
+    {% image "R8", { className: "photo--medium" } %}
 
     <p>La participation de {{ site.homeworkFee }} aide à financer ces activités.</p>
-
-    <div class="gallery">
-      {% comingPhoto %}
-      {% comingPhoto %}
-      {% comingPhoto %}
-    </div>
   </section>
 
   <section class="section" aria-labelledby="inscription">
@@ -98,9 +96,10 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
     <p>Votre jeune est en 3e, 4e, 5e ou 6e secondaire et bloque dans une matière ? Aux ateliers coup de pouce, il vient avec ses questions. Des volontaires qui connaissent bien la matière l'aident, seul à seul ou en petit groupe. Les ateliers sont organisés par le Service de Prévention de Koekelberg et le Forum Koekelbergeois, et encadrés par les médiateurs scolaires du Service de Prévention.</p>
     <ul class="details">
       <li><strong>Pour qui</strong> : les jeunes de la 3e à la 6e secondaire qui habitent Koekelberg ou y vont à l'école</li>
-      <li><strong>Quand et où</strong> : le mercredi de 14h à 17h à l'Institut des Ursulines (71 rue Jules Debecker), et le samedi de 10h à 13h au Service de Prévention (118 rue de l'Église Sainte-Anne)</li>
+      <li><strong>Quand et où</strong> : le mercredi de 14h à 17h à l'Institut des Ursulines (rue Jules Debecker 71), et le samedi de 10h à 13h au Service de Prévention (rue de l'Église Sainte-Anne 118)</li>
       <li><strong>Participation</strong> : gratuit</li>
       <li><strong>Inscription</strong> : auprès du Service de Prévention de Koekelberg, au <a class="nowrap" href="tel:+3224356809">02 435 68 09</a> ou à <a href="mailto:pprevention@koekelberg.brussels">pprevention@<wbr>koekelberg.brussels</a></li>
     </ul>
+    {% image "R13", { className: "photo--medium" } %}
   </section>
 </div>

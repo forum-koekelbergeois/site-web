@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  showsForumButtons,
   STATUS,
   REGISTRATION,
   FREE_ENTRY,
@@ -122,18 +123,6 @@ test("annex A2 texts, word for word", () => {
     "Les inscriptions sont clôturées. Découvrez nos autres activités.",
   );
   assert.equal(
-    registrationText(
-      {
-        ...workshop,
-        registration: REGISTRATION.PARTNER,
-        registrationPartner: { name: "Le Troisième Œil", contact: "02 427 75 42" },
-      },
-      today,
-      site,
-    ),
-    "Les inscriptions se font auprès de Le Troisième Œil : 02 427 75 42.",
-  );
-  assert.equal(
     registrationText({ ...workshop, registration: REGISTRATION.FREE_ENTRY }, today, site),
     "Entrée libre, sans inscription.",
   );
@@ -154,5 +143,49 @@ test("describeStatus combines everything for a template", () => {
     status: STATUS.OPEN,
     label: "Inscriptions ouvertes",
     text: registrationText(workshop, "2026-11-07", site),
+    buttons: true,
   });
+});
+
+const partnerActivity = {
+  ...workshop,
+  registration: REGISTRATION.PARTNER,
+  registrationPartnerName: "Le Troisième Œil",
+  registrationPartnerContact: "02 427 75 42 ou info@3oeil.be",
+};
+
+test("partner registration, status Ouvert", () => {
+  assert.equal(
+    registrationText(partnerActivity, "2026-11-01", site),
+    "Les inscriptions se font auprès de notre partenaire, Le Troisième Œil : 02 427 75 42 ou info@3oeil.be.",
+  );
+  assert.equal(describeStatus(partnerActivity, "2026-11-01", site).label, "Inscriptions ouvertes");
+});
+
+test("partner registration, status Complet", () => {
+  const full = { ...partnerActivity, status: STATUS.WAITLIST };
+  assert.equal(
+    registrationText(full, "2026-11-01", site),
+    "Cette activité est complète. Pour la liste d'attente, contactez notre partenaire, Le Troisième Œil : 02 427 75 42 ou info@3oeil.be.",
+  );
+  assert.equal(describeStatus(full, "2026-11-01", site).label, "Complet, liste d'attente");
+});
+
+test("partner registration, status Clôturé or deadline past: closed text without details", () => {
+  const closedText = "Les inscriptions sont clôturées. Découvrez nos autres activités.";
+  assert.equal(registrationText({ ...partnerActivity, status: STATUS.CLOSED }, "2026-11-01", site), closedText);
+  const deadline = { ...partnerActivity, registrationDeadline: "2026-10-31" };
+  assert.equal(registrationText(deadline, "2026-11-01", site), closedText);
+});
+
+test("Forum buttons: phone or message registration, open or full only", () => {
+  const today = "2026-11-01";
+  assert.equal(showsForumButtons(workshop, today), true);
+  assert.equal(showsForumButtons({ ...workshop, status: STATUS.WAITLIST }, today), true);
+  assert.equal(showsForumButtons({ ...workshop, status: STATUS.CLOSED }, today), false);
+  assert.equal(showsForumButtons({ ...workshop, registrationDeadline: "2026-10-31" }, today), false);
+  assert.equal(showsForumButtons({ ...workshop, registration: REGISTRATION.FREE_ENTRY }, today), false);
+  for (const status of Object.values(STATUS)) {
+    assert.equal(showsForumButtons({ ...partnerActivity, status }, today), false, status);
+  }
 });

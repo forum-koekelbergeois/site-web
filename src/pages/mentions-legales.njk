@@ -12,7 +12,7 @@ description: "Qui édite ce site, quelles informations nous recueillons par le f
     <p>Ce site est édité par :</p>
     <p>
       <strong>{{ site.legalName }}</strong><br>
-      Siège : {{ forum.address }}<br>
+      Siège : {{ forum.addressLine }}<br>
       Numéro d'entreprise : {{ site.companyNumber }}, {{ site.companyRegister }}<br>
       E-mail : <a href="mailto:{{ site.email.address }}">{{ site.email.address | replace("@", "@<wbr>") | safe }}</a><br>
       Téléphone : {% phoneLink %}<br>

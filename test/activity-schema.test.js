@@ -57,11 +57,18 @@ test("address is required when the venue is « Autre »", () => {
   assert.deepEqual(errorsFor({ venue: "Autre", venueAddress: "Basilique de Koekelberg" }), []);
 });
 
-test("partner is required when registration is « Chez un partenaire »", () => {
-  assert.match(errorsFor({ registration: "Chez un partenaire" })[0], /^Champ 13 /);
-  assert.match(errorsFor({ registration: "Chez un partenaire", registrationPartner: { name: "X" } })[0], /^Champ 13 /);
+test("partner name (13a) and details (13b) are required when registration is « Chez un partenaire »", () => {
+  const errors = errorsFor({ registration: "Chez un partenaire" });
+  assert.equal(errors.length, 2);
+  assert.match(errors[0], /^Champ 13a « Nom du partenaire d'inscription » : ce champ est obligatoire quand l'inscription est « Chez un partenaire »/);
+  assert.match(errors[1], /^Champ 13b « Coordonnées du partenaire »/);
+  assert.match(errorsFor({ registration: "Chez un partenaire", registrationPartnerName: "X" })[0], /^Champ 13b /);
   assert.deepEqual(
-    errorsFor({ registration: "Chez un partenaire", registrationPartner: { name: "X", contact: "02 000 00 00" } }),
+    errorsFor({
+      registration: "Chez un partenaire",
+      registrationPartnerName: "Le Troisième Œil",
+      registrationPartnerContact: "02 427 75 42 ou info@3oeil.be",
+    }),
     [],
   );
 });

@@ -27,8 +27,8 @@ Votre accord, que vous donnez en cochant la case du formulaire. Vous pouvez le r
 
 - Notre équipe.
 - Netlify, Inc. (États-Unis), qui héberge le site et reçoit les messages du formulaire. Le transfert vers les États-Unis est encadré par le EU-US Data Privacy Framework et par des clauses contractuelles types.
-- Akismet (Automattic, Inc., États-Unis), le filtre anti-spam utilisé par Netlify, qui analyse chaque message. [À VÉRIFIER : garanties de transfert d'Automattic.]
-- Nos messageries : {{ site.email.address }}, fournie par la Commune de Koekelberg, et une boîte Gmail de l'ASBL (Google).
+- Akismet (Automattic, Inc., États-Unis), le filtre anti-spam utilisé par Netlify, qui analyse chaque message.
+- Nos messageries : [{{ site.email.address }}](mailto:{{ site.email.address }}), fournie par la Commune de Koekelberg, et une boîte Gmail de l'ASBL (Google).
 - WhatsApp (Meta), si nous vous répondons par ce moyen.
 - Notre liste d'attente de l'école de devoirs, tenue dans un fichier sur un ordinateur du Forum.
 

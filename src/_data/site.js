@@ -7,26 +7,41 @@ const osmSearch = (query) =>
 // Single source for the homework school fee.
 const homeworkFee = "15 € par trimestre";
 
-const places = {
-  forum: {
-    name: "Forum Koekelbergeois",
-    street: "17 rue Herkoliers",
+// Belgian address format: number after the street. "Line" variants start an
+// address line (capital letter); the others are used inside a sentence.
+const place = ({ name, street, formLabel }) => {
+  const streetLine = street[0].toUpperCase() + street.slice(1);
+  return {
+    name,
+    street,
+    streetLine,
     postcode: "1081",
     city: "Koekelberg",
-    address: "17 rue Herkoliers, 1081 Koekelberg",
+    address: `${street}, 1081 Koekelberg`,
+    addressLine: `${streetLine}, 1081 Koekelberg`,
     // Label used in the activity form (annex A, field 7).
+    formLabel,
+    mapUrl: osmSearch(`${streetLine}, 1081 Koekelberg`),
+  };
+};
+
+const places = {
+  forum: place({
+    name: "Forum Koekelbergeois",
+    street: "rue Herkoliers 17",
     formLabel: "Forum Koekelbergeois (rue Herkoliers 17)",
-    mapUrl: osmSearch("17 rue Herkoliers, 1081 Koekelberg"),
-  },
-  jourdan: {
+  }),
+  jourdan: place({
     name: "Jourdan Village",
-    street: "39 rue François Delcoigne",
-    postcode: "1081",
-    city: "Koekelberg",
-    address: "39 rue François Delcoigne, 1081 Koekelberg",
+    street: "rue François Delcoigne 39",
     formLabel: "Jourdan Village (rue François Delcoigne 39)",
-    mapUrl: osmSearch("39 rue François Delcoigne, 1081 Koekelberg"),
-  },
+  }),
+};
+
+const phone = {
+  display: "02 435 68 45",
+  href: "tel:+3224356845",
+  hours: "du lundi au vendredi de 8h30 à 18h30",
 };
 
 export default {
@@ -36,11 +51,7 @@ export default {
   companyNumber: "0874.744.614",
   companyRegister: "RPM Bruxelles (tribunal de l'entreprise francophone)",
 
-  phone: {
-    display: "02 435 68 45",
-    href: "tel:+3224356845",
-    hours: "du lundi au vendredi de 8h30 à 18h30",
-  },
+  phone,
 
   email: {
     address: "fkoekelbergeois@koekelberg.brussels",
@@ -113,6 +124,24 @@ export default {
     homework: "ecole-de-devoirs",
     frenchClasses: "cours-de-francais",
     volunteer: "volontaire",
+  },
+
+  // Technical texts (content document, "Textes techniques").
+  ui: {
+    skipLink: "Aller au contenu",
+    headerLogoAlt: "Forum Koekelbergeois, page d'accueil",
+    menuOpen: "Menu",
+    menuClose: "Fermer le menu",
+    mapLink: "Voir sur la carte",
+    mapLinkHint: " (ouvre OpenStreetMap dans un nouvel onglet)",
+    instagramLabel: "Instagram du Forum Koekelbergeois (nouvel onglet)",
+    imageCaption: "Illustration",
+  },
+
+  // Contact form texts, used in task 4.5.
+  form: {
+    sending: "Envoi en cours…",
+    error: `Votre message n'a pas pu être envoyé. Réessayez ou appelez-nous au ${phone.display}.`,
   },
 
   // "Dernière mise à jour" of the privacy page, e.g. "15 novembre 2026".

@@ -5,6 +5,7 @@ eleventyComputed:
   description: "Appelez-nous au {{ site.phone.display }}, {{ site.phone.hours }}, écrivez-nous ou laissez-nous un message. Forum Koekelbergeois, {{ site.places.forum.street }}."
 shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-nous ou laissez-nous un message."
 ---
+{%- set placeImages = { forum: "R9", jourdan: "R10" } -%}
 {%- set placeActivities = {
   forum: "Écoles de devoirs primaire et secondaire, ateliers, cours de français. C'est aussi notre adresse postale.",
   jourdan: "École de devoirs intergénérationnelle"
@@ -40,11 +41,12 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
         <div class="card__body">
           <h3 id="lieu-{{ id }}">{{ place.name }}</h3>
           <dl class="facts">
-            <div><dt>Adresse</dt><dd>{{ place.address }}</dd></div>
+            <div><dt>Adresse</dt><dd>{{ place.addressLine }}</dd></div>
             <div><dt>Ce qui s'y passe</dt><dd>{{ placeActivities[id] }}</dd></div>
           </dl>
-          <p><a class="more" href="{{ place.mapUrl }}">Voir sur la carte<span class="visually-hidden"> : {{ place.name }}</span></a></p>
+          <p><a class="more" href="{{ place.mapUrl }}" target="_blank" rel="noopener noreferrer" aria-describedby="lieu-{{ id }}">{{ site.ui.mapLink }}<span class="visually-hidden">{{ site.ui.mapLinkHint }}</span></a></p>
         </div>
+        {% image placeImages[id] %}
       </section>
       {%- endfor %}
     </div>
@@ -54,7 +56,7 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
   <section class="section" aria-labelledby="reseaux">
     <h2 id="reseaux">Sur les réseaux</h2>
     <ul>
-      <li>Instagram : <a href="{{ site.instagram.url }}">{{ site.instagram.handle }}</a></li>
+      <li>Instagram : {% include "partials/instagram-link.njk" %}</li>
       <li>Notre groupe Facebook est privé : il est réservé aux familles inscrites, et l'accès se fait sur demande.</li>
     </ul>
   </section>

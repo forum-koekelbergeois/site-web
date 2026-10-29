@@ -23,12 +23,12 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <a class="skip-link" href="#contenu">{{ site.ui.skipLink }}</a>
 
   <header class="site-header">
     <div class="container site-header__inner">
       <a class="site-logo" href="/">
-        <img src="/assets/logo-forum-koekelbergeois.webp" width="240" height="134" alt="Forum Koekelbergeois, page d'accueil">
+        <img src="/assets/logo-forum-koekelbergeois.webp" width="240" height="134" alt="{{ site.ui.headerLogoAlt }}">
       </a>
       <nav class="site-nav" aria-label="Menu principal">
         <ul>
@@ -50,10 +50,10 @@
   <footer class="site-footer">
     <ul class="container site-footer__list">
       <li>{{ site.legalName }}</li>
-      <li><span class="sep" aria-hidden="true">·</span>{{ site.places.forum.address }}</li>
+      <li><span class="sep" aria-hidden="true">·</span>{{ site.places.forum.addressLine }}</li>
       <li><span class="sep" aria-hidden="true">·</span><a class="nowrap" href="{{ site.phone.href }}">{{ site.phone.display }}</a></li>
       <li><span class="sep" aria-hidden="true">·</span><a href="mailto:{{ site.email.address }}">{{ site.email.address | replace("@", "@<wbr>") | safe }}</a></li>
-      <li><span class="sep" aria-hidden="true">·</span>Instagram&nbsp;<a href="{{ site.instagram.url }}">{{ site.instagram.handle }}</a></li>
+      <li><span class="sep" aria-hidden="true">·</span>Instagram&nbsp;{% include "partials/instagram-link.njk" %}</li>
       <li><span class="sep" aria-hidden="true">·</span><a href="/mentions-legales/">Mentions légales et vie privée</a></li>
     </ul>
   </footer>

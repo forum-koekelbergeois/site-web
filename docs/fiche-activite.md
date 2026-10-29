@@ -20,12 +20,13 @@ Ce document sert de référence pour configurer l'interface d'édition `/admin` 
 | 10 | Nombre de places | `places` | Non | Nombre entier |
 | 11 | Statut | `status` | Oui, `Ouvert` par défaut | Liste : `Ouvert`, `Complet avec liste d'attente`, `Clôturé`. Ignoré si l'inscription est `Entrée libre` |
 | 12 | Inscription | `registration` | Oui, `Téléphone ou message` par défaut | Liste : `Téléphone ou message`, `Chez un partenaire`, `Entrée libre` |
-| 13 | Partenaire d'inscription | `registrationPartner.name` et `registrationPartner.contact` | Oui si `registration` vaut `Chez un partenaire` | Nom, puis coordonnées |
+| 13a | Nom du partenaire d'inscription | `registrationPartnerName` | Oui si `registration` vaut `Chez un partenaire` | Texte, par exemple `Le Troisième Œil` |
+| 13b | Coordonnées du partenaire | `registrationPartnerContact` | Oui si `registration` vaut `Chez un partenaire` | Texte, par exemple `02 427 75 42 ou info@3oeil.be` (téléphones et e-mails deviennent cliquables) |
 | 14 | Date limite d'inscription | `registrationDeadline` | Non | Date `AAAA-MM-JJ` |
 | 15 | Description courte | `summary` | Oui | Texte, 155 caractères au plus |
 | 16 | Description complète | *(texte sous l'en-tête)* | Non | Texte simple (gras et listes permis) |
-| 17 | Organisé avec | `organizedWith` | Non | Texte |
-| 18 | Photo | `photo` | Non (si vide : image par défaut du type) | Chemin de l'image WebP |
+| 17 | Organisé avec | `organizedWith` | Non | Texte, affiché « Organisé avec [partenaire] » |
+| 18 | Photo | `photo` | Non (si vide : image par défaut du type, voir plus bas) | Chemin de l'image WebP, par exemple `/assets/images/ia4.webp` |
 | 19 | Texte alternatif de la photo | `photoAlt` | Oui si `photo` est rempli | Texte |
 | 20 | Avec le soutien de | `funders` | Non | Choix multiple : `COCOF`, `Fédération Wallonie-Bruxelles`, `urban.brussels (CQD)`, `perspective.brussels`, `Commune de Koekelberg` |
 | — | *(technique)* Brouillon | `draft` | Non | `true` : visible en local, exclue en production |
@@ -56,10 +57,15 @@ Pour une inscription chez un partenaire :
 
 ```yaml
 registration: "Chez un partenaire"
-registrationPartner:
-  name: "Le Troisième Œil"
-  contact: "02 427 75 42 ou info@3oeil.be"
+registrationPartnerName: "Le Troisième Œil"
+registrationPartnerContact: "02 427 75 42 ou info@3oeil.be"
 ```
+
+Dans ce cas, la page n'affiche ni le numéro du Forum ni le bouton « Laissez-nous un message » : seules les coordonnées du partenaire.
+
+## Images par défaut des types
+
+Sans photo (champ 18), la page affiche l'image par défaut du type, qui sert aussi d'image de partage : Atelier IA5, Sortie IA6, Rencontre IA7, Cours IA8 (voir `src/_data/images.js`).
 
 ## Contrôle à la construction
 
@@ -79,4 +85,5 @@ Calculé par `lib/activity-status.js` pour la date du jour à Bruxelles :
 
 - l'activité est **passée** le lendemain de sa date de fin (ou de sa date de début si la fin est vide) ;
 - le **statut effectif** est « Entrée libre » si l'inscription l'est, « Clôturé » le lendemain de la date limite d'inscription, sinon le statut de la fiche ;
-- l'étiquette de carte et le texte de l'annexe A2 en découlent.
+- l'étiquette de carte et le texte de l'annexe A2 en découlent ;
+- le numéro du Forum et le bouton « Laissez-nous un message » s'affichent seulement pour une inscription « Téléphone ou message » au statut effectif « Ouvert » ou « Complet avec liste d'attente ».
