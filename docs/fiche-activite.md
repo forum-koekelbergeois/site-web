@@ -91,3 +91,23 @@ Calculé par `lib/activity-status.js` pour la date du jour à Bruxelles :
 - le **statut effectif** est « Entrée libre » si l'inscription l'est, « Clôturé » le lendemain de la date limite d'inscription, sinon le statut de la fiche ;
 - l'étiquette de carte et le texte de l'annexe A2 en découlent ;
 - le numéro du Forum et le bouton « Laissez-nous un message » s'affichent seulement pour une inscription « Téléphone ou message » au statut effectif « Ouvert » ou « Complet avec liste d'attente ».
+
+## Masquage et clôture automatiques
+
+- À la construction du site, une activité passée n'apparaît plus dans la liste ni dans le sitemap. Sa page reste en ligne, pour les anciens liens, et affiche « Cette activité est terminée. Découvrez nos prochaines activités → » à la place de l'inscription.
+- Le site n'étant reconstruit que rarement, le script `/js/activites.js` refait le même calcul chaque jour dans le navigateur, avec la date de Bruxelles. Il utilise le même code que la construction (`lib/activity-status.js`). Une activité est passée à partir de 0 h le lendemain de sa date de fin (ou de début) ; une inscription « jusqu'au D » est clôturée à partir de 0 h le lendemain de D.
+- Sans JavaScript, la page reste telle qu'au jour de la dernière construction.
+- En prévisualisation locale uniquement, `?date-test=AAAA-MM-JJ` simule la date du jour, par exemple `/activites/?date-test=2026-11-21`. Ce paramètre n'existe pas sur le site en production.
+
+## Liens de pré-remplissage du formulaire de contact
+
+Format fixe pour les quatre cas de l'annexe C (le formulaire arrive en 4.5) :
+
+| Lien de départ | Adresse |
+|---|---|
+| Page d'une activité | `/contact/?demande=activite&activite=Inscription%20%3A%20[titre]%20([date])#formulaire` |
+| Page Écoles de devoirs | `/contact/?demande=ecole-de-devoirs#formulaire` |
+| Cours de français (accueil) | `/contact/?demande=cours-de-francais#formulaire` |
+| Devenir volontaire (accueil) | `/contact/?demande=volontaire#formulaire` |
+
+Pour une activité, la valeur de `activite` est « Inscription : [titre] ([date de début]) », avec la date en toutes lettres, par exemple « Inscription : L'IA et les devoirs de mes enfants (6 novembre 2026) ». Aucune donnée personnelle dans l'adresse : seulement le type de demande, le titre et la date de l'activité.

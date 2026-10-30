@@ -3,15 +3,38 @@ permalink: /activites/
 title: Nos activités à Koekelberg – Forum Koekelbergeois
 description: "Ateliers, sorties, rencontres et cours de français ouverts à tous à Koekelberg : découvrez nos prochaines activités et inscrivez-vous par téléphone."
 shareText: "Ateliers, sorties et rencontres ouverts à tous à Koekelberg : voici les prochaines activités du Forum Koekelbergeois."
+activityScript: true
 ---
+{#- Cards carry their dates and status in data-* so /js/activites.js can hide
+    past activities and close registrations without a new build. -#}
 <div class="container">
   <h1>Nos activités</h1>
   <p class="lead">Ateliers, sorties, rencontres et cours : voici nos prochaines activités, ouvertes à tous. Pour vous inscrire, appelez-nous ou laissez-nous un message depuis la page de l'activité.</p>
   {% image "IA9", { loading: "eager", className: "photo--banner" } %}
 
-  <div class="placeholder-block" data-placeholder="Liste des activités : tâche 4.4">
-    <p>Liste des activités : tâche 4.4</p>
-  </div>
+  {%- set activities = collections.upcomingActivities %}
+  <ul class="activity-list" role="list">
+    {%- for activity in activities %}
+    {%- set d = activity.data %}
+    {%- set s = d | activityStatus(site) %}
+    <li class="activity-card" data-activity-card
+      data-start="{{ d.startDate | isoDate }}" data-end="{{ d.endDate | isoDate }}" data-deadline="{{ d.registrationDeadline | isoDate }}"
+      data-status="{{ d.status }}" data-registration="{{ d.registration }}">
+      <h2 class="activity-card__title"><a href="{{ activity.url }}">{{ d.title }}</a></h2>
+      <p class="activity-card__tags">
+        <span class="badge">{{ d.type }}</span>
+        <span class="badge badge--price">{{ "Gratuit" if d.free else d.price }}</span>
+      </p>
+      <p class="activity-card__date"><time datetime="{{ d.startDate | isoDate }}">{{ d.startDate | frenchDate }}</time></p>
+      <p class="activity-card__audience">Pour qui : {{ d.audience }}</p>
+      <p class="activity-card__summary">{{ d.summary }}</p>
+      <p class="status-label status-label--{{ s.status | slugify }}" data-status-label>{{ s.label }}</p>
+      <div class="activity-card__image">{% activityImage { photo: d.photo, photoAlt: d.photoAlt, type: d.type }, { card: true } %}</div>
+    </li>
+    {%- endfor %}
+  </ul>
+
+  <p class="empty-state" data-activity-empty{% if activities.length %} hidden{% endif %}>Aucune activité ouverte pour le moment. Appelez-nous au <strong>{% phoneLink %}</strong> ou suivez-nous sur Instagram ({%- include "partials/instagram-link.njk" -%}) pour connaître les prochaines.</p>
 
   <aside class="callout">
     <p>Vous cherchez les stages et les sorties en famille de nos écoles de devoirs ? Ils sont réservés aux familles inscrites. <a class="more" href="/ecoles-de-devoirs/">Découvrir nos écoles de devoirs →</a></p>

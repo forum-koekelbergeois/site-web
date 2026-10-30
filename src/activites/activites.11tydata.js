@@ -9,6 +9,7 @@ export default {
   ...DEFAULTS,
   tags: ["activities"],
   layout: "activity.njk",
+  activityScript: true,
   permalink: (data) => activityPermalink(data.page.inputPath, data.startDate),
   eleventyComputed: {
     metaTitle: (data) => `${data.title} – Forum Koekelbergeois`,

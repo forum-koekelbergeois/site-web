@@ -1,8 +1,8 @@
 ---
 layout: base.njk
 ---
-{#- Activity page (content section 4). The status is computed at build time;
-    task 4.4 adds the script that updates it every day in the browser. -#}
+{#- Activity page (content section 4). The status is computed at build time,
+    then updated every day in the browser by /js/activites.js (data-* below). -#}
 {%- set data = {
   startDate: startDate, endDate: endDate, status: status, registration: registration,
   registrationPartnerName: registrationPartnerName, registrationPartnerContact: registrationPartnerContact,
@@ -10,9 +10,16 @@ layout: base.njk
 } -%}
 {%- set s = data | activityStatus(site) -%}
 {%- set place = { venue: venue, venueAddress: venueAddress } | activityPlace -%}
-{%- set prefill = "Inscription : " + title + " (" + (startDate | shortDate) + ")" -%}
+{%- set pastHtml -%}
+<p>Cette activité est terminée. <a class="more" href="/activites/">Découvrez nos prochaines activités →</a></p>
+{%- endset -%}
+{%- set closedHtml -%}
+<p>Les inscriptions sont clôturées. <a href="/activites/">Découvrez nos autres activités</a>.</p>
+{%- endset -%}
 {%- set phoneHtml = '<a class="nowrap" href="' + site.phone.href + '">' + site.phone.display + '</a>' -%}
-<article class="container activity">
+<article class="container activity" data-activity-page
+  data-start="{{ startDate | isoDate }}" data-end="{{ endDate | isoDate }}" data-deadline="{{ registrationDeadline | isoDate }}"
+  data-status="{{ status }}" data-registration="{{ registration }}">
   <header class="activity__header">
     {% activityImage { photo: photo, photoAlt: photoAlt, type: type }, { loading: "eager" } %}
     <p><span class="badge">{{ type }}</span></p>
@@ -35,14 +42,14 @@ layout: base.njk
   <p>Inscription jusqu'au {{ registrationDeadline | frenchDate }}</p>
   {%- endif %}
 
-  <div class="registration">
+  <div class="registration" data-registration>
     {%- if s.past %}
-    <p>Cette activité est terminée. <a class="more" href="/activites/">Découvrez nos prochaines activités →</a></p>
+    {{ pastHtml | safe }}
     {%- elif s.status == "Entrée libre" %}
     <p>{{ s.text }}</p>
     <p>Une question ? Appelez-nous au <strong>{{ phoneHtml | safe }}</strong>.</p>
     {%- elif s.status == "Clôturé" %}
-    <p>{{ s.text | escape | replace("Découvrez nos autres activités", '<a href="/activites/">Découvrez nos autres activités</a>') | safe }}</p>
+    {{ closedHtml | safe }}
     {%- elif registration == "Chez un partenaire" %}
     <p>{{ s.text | linkContacts | safe }}</p>
     {%- else %}
@@ -52,11 +59,14 @@ layout: base.njk
       {%- if s.status != "Ouvert" %}
       <a class="button button--secondary" href="{{ site.phone.href }}">{{ site.phone.display }}</a>
       {%- endif %}
-      <a class="button" href="/contact/?demande={{ site.contactTopics.activity }}&amp;activite={{ prefill | urlencode }}#formulaire">Laissez-nous un message</a>
+      <a class="button" href="{{ 'activity' | contactUrl({ title: title, startDate: startDate }) }}">Laissez-nous un message</a>
     </p>
     {%- endif %}
     {%- endif %}
   </div>
+  {#- Used by /js/activites.js when the activity passes or closes after the build. #}
+  <template id="inscription-past">{{ pastHtml | safe }}</template>
+  <template id="inscription-closed">{{ closedHtml | safe }}</template>
 
   {%- if content | trim %}
   <div class="prose">

@@ -561,6 +561,116 @@ thead th {
   max-height: 64px;
 }
 
+/* Activity list (page Activités) */
+
+[hidden] {
+  display: none !important;
+}
+
+.activity-list {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.activity-card {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #d3e6dc;
+  border-top: 4px solid var(--brand);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.activity-card > * {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+/* The image comes first visually, after the heading for screen readers. */
+.activity-card__image {
+  order: -1;
+  margin: 0 0 0.75rem;
+}
+
+.activity-card__image .photo {
+  border-radius: 0;
+}
+
+.site-main .activity-card__title {
+  margin: 0 1rem 0.25rem;
+  font-size: 1.25rem;
+}
+
+.activity-card__title a {
+  display: block;
+  padding: 0.5rem 0;
+}
+
+.activity-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.activity-card__date {
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+}
+
+.activity-card__audience {
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+/* Status: the text carries the meaning; the border and symbol only help. */
+.status-label {
+  align-self: flex-start;
+  margin-top: auto;
+  margin-bottom: 1rem;
+  padding: 0.25rem 0.75rem;
+  border: 2px solid var(--link);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.status-label::before {
+  content: "● ";
+  color: var(--link);
+}
+
+.status-label--complet-avec-liste-d-attente::before {
+  content: "◐ ";
+}
+
+.status-label--cloture {
+  border-style: dashed;
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+}
+
+.status-label--cloture::before {
+  content: "■ ";
+  color: var(--text-muted);
+}
+
+.status-label--entree-libre::before {
+  content: "○ ";
+}
+
+.empty-state {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-left: 4px solid var(--brand);
+  background: var(--bg-soft);
+}
+
 /* Activity page */
 
 .activity__header .photo {
@@ -710,6 +820,10 @@ thead th {
 
   .cards {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .activity-list {
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
   }
 
   .cards--plain {

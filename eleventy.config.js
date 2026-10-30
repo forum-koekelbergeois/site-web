@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { RenderPlugin } from "@11ty/eleventy";
-import { describeStatus, todayInBrussels, toIsoDate } from "./lib/activity-status.js";
+import { describeStatus, isPast, todayInBrussels, toIsoDate } from "./lib/activity-status.js";
 import { describeBlockingMarkers, findPlaceholders, isProduction } from "./lib/markers.js";
 import { typographyHtml } from "./lib/typography.js";
 import { imageHtml, findMissingImages, findMissingReferences } from "./lib/images.js";
@@ -54,6 +54,29 @@ export default function (eleventyConfig) {
     }),
   );
 
+  // Activities shown in the list: published, not past at build time, nearest first.
+  // The browser script (/js/activites.js) hides the ones that pass afterwards.
+  eleventyConfig.addCollection("upcomingActivities", (collectionApi) =>
+    collectionApi
+      .getFilteredByTag("activities")
+      .filter((item) => !item.data.draft && !isPast(item.data, today))
+      .sort((a, b) => toIsoDate(a.data.startDate).localeCompare(toIsoDate(b.data.startDate))),
+  );
+
+  eleventyConfig.addFilter("activityIsPast", (data) => isPast(data, today));
+
+  // Prefill link of the contact form (annex C). Only the request type and the
+  // activity title and date: never personal data.
+  eleventyConfig.addFilter("contactUrl", (topic, activity) => {
+    const params = new URLSearchParams({ demande: site.contactTopics[topic] });
+    if (activity) {
+      const iso = toIsoDate(activity.startDate);
+      const date = iso ? frenchDate.format(new Date(`${iso}T00:00:00Z`)) : activity.startDate;
+      params.set("activite", `Inscription : ${activity.title} (${date})`);
+    }
+    return `/contact/?${params.toString().replace(/\+/g, "%20")}#formulaire`;
+  });
+
   eleventyConfig.addFilter("activityStatus", (data, siteData) => describeStatus(data, today, siteData));
   eleventyConfig.addFilter("isoDate", toIsoDate);
 
@@ -61,12 +84,6 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("frenchDate", (value) => {
     const iso = toIsoDate(value);
     return iso ? frenchDate.format(new Date(`${iso}T00:00:00Z`)) : value;
-  });
-
-  // "06/11/2026", as in annex A.
-  eleventyConfig.addFilter("shortDate", (value) => {
-    const iso = toIsoDate(value);
-    return iso ? iso.split("-").reverse().join("/") : value;
   });
 
   // Venue of an activity (annex A, fields 7 and 8): name, address and map link.
@@ -105,11 +122,15 @@ export default function (eleventyConfig) {
   });
 
   // Photo of an activity (fields 18 and 19), or the default image of its type.
+  // On a card, the default image uses its lighter 1 200 × 630 version.
   eleventyConfig.addShortcode("activityImage", (data, options = {}) => {
     const known = images.list.find((i) => i.file === data.photo);
+    const typeImage = images.byCode[images.typeDefaults[data.type]];
     const image = data.photo
       ? { ...(known ?? { code: "photo de la fiche", file: data.photo, width: 1536, height: 1024 }), alt: data.photoAlt }
-      : images.byCode[images.typeDefaults[data.type]];
+      : options.card
+        ? { ...typeImage, file: typeImage.share, width: 1200, height: 630 }
+        : typeImage;
     return imageHtml(image, { ...options, exists: fileExists(image.file) });
   });
 

@@ -85,7 +85,7 @@ shareText: "Aide aux devoirs, ateliers et cours de français à Koekelberg : dé
       <h3>Cours de français pour adultes</h3>
       <p>Gratuits et ouverts à tous, pour les adultes qui veulent apprendre ou améliorer leur français.</p>
       <p>Le jeudi de 9h à 16h et le vendredi de 9h à 13h30, {{ forum.street }}, avec l'ASBL Le Troisième Œil.</p>
-      <p>Pour vous inscrire, appelez-nous au <strong>{% phoneLink %}</strong> ou <a href="/contact/?demande={{ site.contactTopics.frenchClasses }}#formulaire">laissez-nous un message</a>. Vous pouvez aussi vous adresser au Troisième Œil : <a class="nowrap" href="tel:+3224277542">02 427 75 42</a> ou <a href="mailto:info@3oeil.be">info@3oeil.be</a>.</p>
+      <p>Pour vous inscrire, appelez-nous au <strong>{% phoneLink %}</strong> ou <a href="{{ 'frenchClasses' | contactUrl }}">laissez-nous un message</a>. Vous pouvez aussi vous adresser au Troisième Œil : <a class="nowrap" href="tel:+3224277542">02 427 75 42</a> ou <a href="mailto:info@3oeil.be">info@3oeil.be</a>.</p>
     </div>
     {% image "IA3" %}
   </div>
@@ -117,7 +117,7 @@ shareText: "Aide aux devoirs, ateliers et cours de français à Koekelberg : dé
         <li>Nous vous demandons votre CV, puis nous vous rencontrons dans nos locaux, {{ forum.street }}, pendant environ une heure : un entretien et un court test écrit de niveau CEB, en français et en mathématiques.</li>
         <li>Vous participez à une séance d'essai, puis nous choisissons ensemble votre créneau.</li>
       </ol>
-      <p><a class="more" href="/contact/?demande={{ site.contactTopics.volunteer }}#formulaire">Proposer mon aide →</a></p>
+      <p><a class="more" href="{{ 'volunteer' | contactUrl }}">Proposer mon aide →</a></p>
     </div>
     {% image "R12" %}
   </div>
