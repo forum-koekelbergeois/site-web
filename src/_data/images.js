@@ -1,6 +1,6 @@
 // Image slots (content document, annex E). Files are WebP, converted outside
 // the repository (orientation, sRGB, faces blurred where decided, no metadata)
-// and validated by Aymeric on 30/10/2026 (R61 to R81: mission 4.0b). If a file
+// and validated by Aymeric on 30/10/2026 (R61 to R81: missions 4.0b and 4.0c). If a file
 // is missing, pages show a neutral placeholder locally and a production build
 // fails.
 
@@ -15,8 +15,9 @@ const FILE_SIZES = {
   R12: [740, 985], R13: [704, 937],
   // Gallery photos: short side 480 px at most, never enlarged.
   R61: [640, 480], R63: [556, 480], R64: [511, 384], R65: [522, 480],
-  R71: [480, 639], R72: [208, 157], R73: [480, 639], R75: [221, 166], R81: [640, 480],
-  // Files still to come: expected size of a 3:2 illustration.
+  R66: [496, 480], R67: [469, 625], R68: [216, 162],
+  R71: [480, 639], R72: [208, 157], R73: [480, 639], R75: [221, 166],
+  R76: [162, 217], R77: [847, 319], R78: [154, 204], R81: [640, 480],
   IA13: [768, 512], IA14: [768, 512], IA15: [768, 512],
 };
 
@@ -61,9 +62,12 @@ const list = [
     "Illustration : un sac à dos, des baskets, un jeu de société et un appareil photo devant un tableau d'affichage coloré.", illustration),
   slot("IA11", "Page Merci (décorative)", "", illustration),
   slot("IA12", "Page 404 (décorative)", "", illustration),
-  slot("IA13", "Écoles de devoirs, bloc École primaire", pending, illustration),
-  slot("IA14", "Écoles de devoirs, bloc École intergénérationnelle", pending, illustration),
-  slot("IA15", "Écoles de devoirs, bloc École secondaire", pending, illustration),
+  slot("IA13", "Écoles de devoirs, bloc École primaire",
+    "Illustration : dans une salle de classe ensoleillée, des enfants font leurs devoirs, aidés par une bénévole âgée et un bénévole.", illustration),
+  slot("IA14", "Écoles de devoirs, bloc École intergénérationnelle",
+    "Illustration : dans une salle lumineuse, des enfants font leurs devoirs et jouent avec des personnes âgées, autour de tables couvertes de nappes rayées.", illustration),
+  slot("IA15", "Écoles de devoirs, bloc École secondaire",
+    "Illustration : des jeunes travaillent autour d'une grande table avec des cahiers et des ordinateurs portables, aidés par un animateur.", illustration),
 
   slot("R1", "Accueil, carte École primaire",
     "Des enfants font leurs devoirs dans une salle de classe de l'école de devoirs.",
@@ -97,6 +101,12 @@ const list = [
     "Des enfants jouent dans la neige, dans une cour entre deux bâtiments.", gallery),
   slot("R65", "Écoles de devoirs, galerie du mercredi",
     "Des enfants jouent à un jeu de société avec un monsieur âgé, autour d'une table en plein air.", gallery),
+  slot("R66", "Écoles de devoirs, galerie du mercredi",
+    "Des jeunes portant un casque jouent sur des ordinateurs alignés dans une salle de jeux vidéo.", gallery),
+  slot("R67", "Écoles de devoirs, galerie du mercredi",
+    "Un groupe d'enfants pose dans un musée, devant un grand portrait peint.", gallery),
+  slot("R68", "Écoles de devoirs, galerie du mercredi",
+    "Deux enfants discutent sous un arbre, dans un parc.", gallery),
   slot("R71", "Écoles de devoirs, galerie des vacances",
     "Les yeux bandés et vêtus de capes, des enfants avancent en file pendant un jeu, guidés par une adulte.", gallery),
   slot("R72", "Écoles de devoirs, galerie des vacances",
@@ -105,6 +115,12 @@ const list = [
     "Un enfant avance sur un parcours suspendu dans les arbres, observé par un autre resté au sol.", gallery),
   slot("R75", "Écoles de devoirs, galerie des vacances",
     "Des enfants visitent une exposition de grandes sculptures en ballons colorés.", gallery),
+  slot("R76", "Écoles de devoirs, galerie des vacances",
+    "Un enfant prépare une pâte au chocolat dans un grand saladier.", gallery),
+  slot("R77", "Écoles de devoirs, galerie des vacances",
+    "Des enfants assis sur un banc dans un vestiaire de football, sous des maillots rouges numérotés.", gallery),
+  slot("R78", "Écoles de devoirs, galerie des vacances",
+    "Une télécabine passe au-dessus d'une rivière et d'une ville.", gallery),
   slot("R81", "Écoles de devoirs, galerie en famille",
     "Un grand groupe de familles pose devant l'entrée d'un parc animalier, autour d'une fontaine sculptée.", gallery),
   slot("R9", "Contact, entrée de la rue Herkoliers 17",

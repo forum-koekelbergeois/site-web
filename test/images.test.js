@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import images from "../src/_data/images.js";
 import { imageHtml, galleryHtml, findMissingImages, findMissingReferences } from "../lib/images.js";
 import { linkContacts, telHref } from "../lib/contact-links.js";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 
 // Reads the RIFF chunks of a WebP file: image size and metadata chunks.
 function webpInfo(path) {
@@ -31,9 +31,9 @@ function webpInfo(path) {
 const EXPECTED = ["IA1", "IA3", "IA4", "IA5", "IA6", "IA7", "IA8", "IA9", "IA11", "IA12",
   "IA13", "IA14", "IA15",
   "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8",
-  "R61", "R63", "R64", "R65", "R71", "R72", "R73", "R75", "R81",
+  "R61", "R63", "R64", "R65", "R66", "R67", "R68",
+  "R71", "R72", "R73", "R75", "R76", "R77", "R78", "R81",
   "R9", "R10", "R12", "R13"];
-const PENDING = ["IA13", "IA14", "IA15"];
 
 test("every image of annex E has a slot, and only those", () => {
   assert.deepEqual(images.list.map((i) => i.code), EXPECTED);
@@ -42,7 +42,6 @@ test("every image of annex E has a slot, and only those", () => {
 test("decorative images have an empty alt, the others a text", () => {
   for (const image of images.list) {
     if (["IA11", "IA12"].includes(image.code)) assert.equal(image.alt, "", image.code);
-    else if (PENDING.includes(image.code)) assert.equal(image.alt, "[DONNÉE À COMPLÉTER]", image.code);
     else assert.ok(image.alt.length > 10, image.code);
   }
 });
@@ -62,13 +61,12 @@ test("each activity type has a default image and a 1 200 × 630 share image", ()
   }
 });
 
-test("IA13 to IA15 are the only slots still waiting for their file", () => {
-  assert.deepEqual(images.pending, PENDING);
-  for (const code of PENDING) assert.equal(existsSync(`src${images.byCode[code].file}`), false, code);
+test("no slot is waiting for its file any more", () => {
+  assert.deepEqual(images.pending, []);
 });
 
-test("every other image file exists with the size declared in images.js", () => {
-  for (const image of images.list.filter((i) => !PENDING.includes(i.code))) {
+test("every image file exists with the size declared in images.js", () => {
+  for (const image of images.list) {
     assert.deepEqual(webpInfo(`src${image.file}`).size, [image.width, image.height], image.code);
   }
 });
@@ -94,6 +92,16 @@ test("an existing file is used and not reported", () => {
   const html = imageHtml(images.byCode.IA11, { exists: true });
   assert.match(html, /src="\/assets\/images\/ia11.webp" width="768" height="512" alt=""/);
   assert.deepEqual(findMissingImages(html), []);
+});
+
+test("the Wednesday and holiday galleries hold eight photos each", () => {
+  const page = readFileSync("src/pages/ecoles-de-devoirs.njk", "utf8");
+  const galleries = [...page.matchAll(/\{% gallery (\[[^\]]*\]) %\}/g)].map((m) => JSON.parse(m[1]));
+  assert.deepEqual(galleries, [
+    ["R6", "R61", "R63", "R64", "R65", "R66", "R67", "R68"],
+    ["R7", "R71", "R72", "R73", "R75", "R76", "R77", "R78"],
+    ["R8", "R81"],
+  ]);
 });
 
 test("a gallery is a list of lazy-loaded images with their size", () => {
