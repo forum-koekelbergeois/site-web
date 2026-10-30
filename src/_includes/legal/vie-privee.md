@@ -7,7 +7,7 @@ Cette page explique comment nous utilisons les informations que vous nous confie
 
 ### Qui est responsable de vos données ?
 
-Le {{ site.legalName }}, {{ site.places.forum.address }}. E-mail : [{{ site.email.address }}](mailto:{{ site.email.address }}). Téléphone : [{{ site.phone.display }}]({{ site.phone.href }}).
+Le {{ site.legalName }}, {{ site.places.forum.address }}. E-mail : [{{ site.email.address }}](mailto:{{ site.email.address }}). Téléphone : {% phoneLink %}.
 
 ### Ce que nous recueillons
 
@@ -43,7 +43,7 @@ Votre accord, que vous donnez en cochant la case du formulaire. Vous pouvez le r
 
 ### Vos droits
 
-Vous pouvez à tout moment consulter vos données, les corriger, les faire effacer, retirer votre accord ou vous opposer à leur utilisation. Écrivez-nous à [{{ site.email.address }}](mailto:{{ site.email.address }}) ou appelez-nous au [{{ site.phone.display }}]({{ site.phone.href }}).
+Vous pouvez à tout moment consulter vos données, les corriger, les faire effacer, retirer votre accord ou vous opposer à leur utilisation. Écrivez-nous à [{{ site.email.address }}](mailto:{{ site.email.address }}) ou appelez-nous au {% phoneLink %}.
 
 Si vous estimez que vos droits ne sont pas respectés, vous pouvez porter plainte auprès de l'Autorité de protection des données (rue de la Presse 35, 1000 Bruxelles, [www.autoriteprotectiondonnees.be](https://www.autoriteprotectiondonnees.be)).
 

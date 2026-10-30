@@ -72,6 +72,8 @@ test("every phone number and e-mail address shown is a tel: or mailto: link", ()
     for (const match of outside.match(PHONE) ?? []) missing.push(`${page.url}: ${match}`);
     for (const match of outside.match(EMAIL) ?? []) missing.push(`${page.url}: ${match}`);
     for (const text of linked) assert.ok(text.trim(), `${page.url}: empty contact link`);
+    // A phone number never breaks across two lines.
+    for (const [tag] of body.matchAll(/<a [^>]*href="tel:[^"]*"[^>]*>/g)) assert.match(tag, /class="[^"]*\bnowrap\b/, `${page.url}: ${tag}`);
   }
   assert.deepEqual(missing, []);
 });

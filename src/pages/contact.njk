@@ -28,7 +28,7 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
         the prefill, the annex C messages and background sending. -#}
     <form class="contact-form" id="formulaire" name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="bot-field">
       <input type="hidden" name="form-name" value="contact">
-      <p class="form-trap" aria-hidden="true"><label>Ne remplissez pas ce champ <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <p class="form-trap" aria-hidden="true"><label>Ne remplissez pas ce champ <input type="text" name="bot-field" tabindex="-1" autocomplete="off"></label></p>
 
       <div class="field">
         <label for="nom">Votre nom et prénom <span class="field-required">(obligatoire)</span></label>

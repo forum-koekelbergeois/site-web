@@ -245,7 +245,7 @@ test("built page: a Netlify form with honeypot and form-name, posting to /merci/
     assert.ok(form.includes(part), part);
   }
   assert.match(html, /<input type="hidden" name="form-name" value="contact">/);
-  assert.match(html, /<p class="form-trap" aria-hidden="true"><label>[^<]*<input name="bot-field" tabindex="-1" autocomplete="off"><\/label><\/p>/);
+  assert.match(html, /<p class="form-trap" aria-hidden="true"><label>[^<]*<input type="text" name="bot-field" tabindex="-1" autocomplete="off"><\/label><\/p>/);
   assert.match(html, /<script src="\/js\/contact\.js" defer><\/script>/);
   assert.doesNotMatch(html, /data-placeholder/);
 });
