@@ -1,30 +1,42 @@
-// Image slots (content document, annex E). Files are added later, once
-// converted to WebP with metadata removed and children's faces blurred.
-// Until a file exists, pages show a neutral placeholder locally, and a
-// production build fails. width/height are the planned file size.
+// Image slots (content document, annex E). Files are WebP, converted outside
+// the repository (orientation, sRGB, faces blurred where decided, no metadata)
+// and validated by Aymeric on 30/10/2026. If a file is missing, pages show a
+// neutral placeholder locally and a production build fails.
 
-const slot = (code, placement, alt, { width, height, format, caption = "" }) => ({
+// Size of each file in src/assets/images/ (2x the display size, never enlarged
+// beyond the original except IA1).
+const FILE_SIZES = {
+  IA1: [1920, 1280], IA3: [800, 533], IA4: [800, 533], IA5: [1536, 1024],
+  IA6: [1536, 1024], IA7: [1536, 1024], IA8: [1536, 1024], IA9: [1536, 1024],
+  IA11: [768, 512], IA12: [768, 512],
+  R1: [720, 540], R2: [720, 960], R3: [720, 540], R4: [800, 600], R5: [1024, 768],
+  R6: [568, 754], R7: [704, 939], R8: [1024, 768], R9: [920, 613], R10: [920, 613],
+  R12: [740, 985], R13: [704, 937],
+};
+
+const slot = (code, placement, alt, { format, caption = "", share = false }) => ({
   code,
   placement,
   file: `/assets/images/${code.toLowerCase()}.webp`,
   alt,
   caption,
-  width,
-  height,
+  width: FILE_SIZES[code][0],
+  height: FILE_SIZES[code][1],
   format,
+  // Share image (Open Graph), 1 200 × 630.
+  ...(share && { share: `/assets/images/${code.toLowerCase()}-partage.webp` }),
 });
 
-const illustration = { width: 1536, height: 1024, format: "Illustration 1 536 × 1 024 (3:2)" };
+const illustration = { format: "Illustration 3:2" };
 const typeDefault = {
-  width: 1200,
-  height: 630,
-  format: "Recadrage 1 200 × 630, aussi utilisé comme image de partage",
+  format: "Illustration 3:2 pour l'en-tête, et recadrage 1 200 × 630 pour le partage",
+  share: true,
 };
 
 const list = [
   slot("IA1", "Accueil, bandeau",
     "Illustration : dans une salle de classe colorée, des enfants font leurs devoirs avec un bénévole, une bénévole âgée aide une fillette, un ado travaille sur un ordinateur et deux mamans discutent près de la porte.",
-    { ...illustration, format: "Illustration 1 536 × 1 024, léger agrandissement ; sur grand écran, bande centrale gardée, titre dans le tiers gauche" }),
+    { format: "Illustration 1 920 × 1 280 (léger agrandissement) ; sur grand écran, bande centrale gardée, titre dans le tiers gauche" }),
   slot("IA3", "Accueil, cours de français",
     "Illustration : des adultes suivent un cours de français devant un tableau vert.", illustration),
   slot("IA4", "Accueil, Sport avec les mamans (aussi photo de la fiche)",
@@ -44,40 +56,40 @@ const list = [
 
   slot("R1", "Accueil, carte École primaire",
     "Des enfants font leurs devoirs dans une salle de classe de l'école de devoirs.",
-    { width: 1600, height: 1200, format: "Photo 4:3 (source R1.jpeg 2 048 × 1 536), recadrée pour retirer le fond, visages d'enfants floutés" }),
+    { format: "Photo 4:3 (source R1.jpeg 2 048 × 1 536), recadrée pour retirer le fond, visages d'enfants floutés" }),
   slot("R2", "Accueil, carte École intergénérationnelle",
     "À Jourdan Village, des enfants partagent un goûter avec des résidents autour d'une table.",
-    { width: 1200, height: 1600, format: "Photo 3:4 (source 1 536 × 2 048), visages des enfants floutés" }),
+    { format: "Photo 3:4 (source 1 536 × 2 048), visages des enfants floutés" }),
   slot("R3", "Accueil, carte École secondaire",
     "Un bénévole aide des jeunes de l'école de devoirs secondaire, dans une salle sous les toits.",
-    { width: 1024, height: 768, format: "Photo 4:3 (1 024 × 768), GPS retiré, visage du jeune au fond flouté s'il est reconnaissable" }),
+    { format: "Photo 4:3 (1 024 × 768), GPS retiré, visage du jeune au fond flouté s'il est reconnaissable" }),
   slot("R4", "Accueil, ateliers pour les familles",
     "Des mamans discutent autour d'une table pendant un atelier.",
-    { width: 1024, height: 768, format: "Photo 4:3 (1 024 × 768), GPS retiré" }),
+    { format: "Photo 4:3 (1 024 × 768), GPS retiré" }),
   slot("R5", "Écoles de devoirs, ateliers sur l'intelligence artificielle (jamais près du groupe de parole)",
     "Des jeunes réunis autour d'un ordinateur portable pendant un atelier sur l'intelligence artificielle.",
-    { width: 1024, height: 768, format: "Photo 4:3 (1 024 × 768), GPS retiré, visages des enfants floutés" }),
+    { format: "Photo 4:3 (1 024 × 768), GPS retiré, visages des enfants floutés" }),
   slot("R6", "Écoles de devoirs, le mercredi",
     "Des enfants font une activité autour d'une table rouge.",
-    { width: 568, height: 754, format: "Photo 3:4 (568 × 754), petit format, visages des enfants floutés" }),
+    { format: "Photo 3:4 (568 × 754), petit format, visages des enfants floutés" }),
   slot("R7", "Écoles de devoirs, pendant les vacances",
     "Pendant un stage, des enfants découvrent un véhicule de police.",
-    { width: 1200, height: 1600, format: "Photo 3:4 (source R7.png 1 536 × 2 048), plaque et visage du policier floutés" }),
+    { format: "Photo 3:4 (source R7.png 1 536 × 2 048), plaque et visage du policier floutés" }),
   slot("R8", "Écoles de devoirs, en famille",
     "Les familles et l'équipe réunies lors de la grande sortie annuelle.",
-    { width: 1024, height: 768, format: "Photo 4:3 (1 024 × 768), visages des enfants floutés" }),
+    { format: "Photo 4:3 (1 024 × 768), visages des enfants floutés" }),
   slot("R9", "Contact, entrée de la rue Herkoliers 17",
     "Illustration de l'entrée du Forum Koekelbergeois, rue Herkoliers 17 : une porte vitrée entourée de panneaux colorés, avec le numéro 17.",
-    { width: 1536, height: 1024, format: "Illustration 3:2 (1 536 × 1 024)", caption: "Illustration" }),
+    { format: "Illustration 3:2 (1 536 × 1 024)", caption: "Illustration" }),
   slot("R10", "Contact, entrée de Jourdan Village",
     "Illustration de l'entrée de la résidence Jourdan Village : des bâtiments blancs autour d'un jardin, avec un totem à flèches vertes.",
-    { width: 1536, height: 1024, format: "Illustration 3:2 (source R10.png, pas R10.webp)", caption: "Illustration" }),
+    { format: "Illustration 3:2 (source R10.png, pas R10.webp)", caption: "Illustration" }),
   slot("R12", "Accueil, devenir volontaire",
     "Vue du dessus : un bénévole aide un jeune à faire ses exercices.",
-    { width: 769, height: 1024, format: "Photo 3:4 (769 × 1 024), GPS retiré" }),
+    { format: "Photo 3:4 (769 × 1 024), GPS retiré" }),
   slot("R13", "Écoles de devoirs, ateliers coup de pouce",
     "Vue du dessus : un bénévole et une jeune travaillent ensemble sur des feuilles d'exercices.",
-    { width: 769, height: 1024, format: "Photo 3:4 (769 × 1 024), GPS retiré" }),
+    { format: "Photo 3:4 (769 × 1 024), GPS retiré" }),
 ];
 
 export default {

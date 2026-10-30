@@ -392,6 +392,10 @@ code {
   max-width: 32rem;
 }
 
+.photo--portrait {
+  max-width: 22rem;
+}
+
 .photo--banner {
   max-height: 22rem;
   object-fit: cover;

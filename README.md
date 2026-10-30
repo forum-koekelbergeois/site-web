@@ -24,7 +24,7 @@ CONTEXT=production npx @11ty/eleventy
 
 - `src/` : les sources du site (pages, styles, images). Le site généré est écrit dans `_site/`, qui n'est pas versionné.
 - `src/_data/site.js` : les données communes (coordonnées, lieux, écoles de devoirs, tarif, financeurs).
-- `src/_data/images.js` : les emplacements d'images (codes IA et R de l'annexe E), avec leur texte alternatif et le fichier attendu dans `src/assets/images/`. Tant qu'un fichier manque, une image provisoire s'affiche en local et la construction de production échoue.
+- `src/_data/images.js` : les emplacements d'images (codes IA et R de l'annexe E), avec leur texte alternatif et le fichier attendu dans `src/assets/images/`. Tant qu'un fichier manque, une image provisoire s'affiche en local et la construction de production échoue. Les images sont traitées hors du dépôt (redressement, sRGB, floutage validé par Aymeric, WebP sans métadonnées) : aucun original n'entre dans le dépôt.
 - `src/pages/` : les pages du site. La partie Vie privée est dans `src/_includes/legal/vie-privee.md`.
 - `src/activites/` : une fiche activité par fichier (voir `docs/fiche-activite.md`) ; chaque fiche produit une page `/activites/<nom-du-fichier>/`.
 - `lib/` : le contrôle des fiches, le calcul des statuts, la typographie et les marqueurs.

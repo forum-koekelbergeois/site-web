@@ -14,7 +14,7 @@ export default {
     metaTitle: (data) => `${data.title} – Forum Koekelbergeois`,
     description: (data) => data.summary,
     // Share image: the activity photo, or the default image of its type.
-    ogImage: (data) => data.photo || typeImage(data)?.file,
+    ogImage: (data) => data.photo || typeImage(data)?.share,
     ogImageAlt: (data) => (data.photo ? data.photoAlt : typeImage(data)?.alt),
   },
   eleventyDataSchema(data) {
