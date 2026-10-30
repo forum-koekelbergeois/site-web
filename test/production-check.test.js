@@ -72,7 +72,11 @@ test("every phone number and e-mail address shown is a tel: or mailto: link", ()
     for (const match of outside.match(PHONE) ?? []) missing.push(`${page.url}: ${match}`);
     for (const match of outside.match(EMAIL) ?? []) missing.push(`${page.url}: ${match}`);
     for (const text of linked) assert.ok(text.trim(), `${page.url}: empty contact link`);
-    // A phone number never breaks across two lines.
+    // A phone number never breaks across two lines: no-break spaces in the text…
+    for (const number of textOf(body).match(/\b0\d{1,3}(?:[ \u00A0\u202F]\d{2,3}){2,3}\b/g) ?? []) {
+      assert.doesNotMatch(number, /[ \u202F]/, `${page.url}: « ${number} » contains a breaking space`);
+    }
+    // …and the nowrap class on links.
     for (const [tag] of body.matchAll(/<a [^>]*href="tel:[^"]*"[^>]*>/g)) assert.match(tag, /class="[^"]*\bnowrap\b/, `${page.url}: ${tag}`);
   }
   assert.deepEqual(missing, []);

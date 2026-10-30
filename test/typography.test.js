@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { typographyHtml, typographyText } from "../lib/typography.js";
+import { keepPhonesTogether, typographyHtml, typographyText } from "../lib/typography.js";
 
 const NBSP = "\u00A0";
 const NNBSP = "\u202F";
@@ -112,9 +112,9 @@ test("attributes in Dutch are left intact", () => {
   assert.equal(typographyHtml('<img lang="nl" alt="Vragen?">'), '<img lang="nl" alt="Vragen?">');
 });
 
-test("tel: and mailto: links are left intact", () => {
+test("tel: and mailto: targets are left intact; only the shown number gets no-break spaces", () => {
   const html = '<a href="tel:+3224356845">02 435 68 45</a> <a href="mailto:fkoekelbergeois@koekelberg.brussels">fkoekelbergeois@<wbr>koekelberg.brussels</a>';
-  assert.equal(typographyHtml(html), html);
+  assert.equal(typographyHtml(html), html.replace(">02 435 68 45<", `>02${NBSP}435${NBSP}68${NBSP}45<`));
 });
 
 test("code, pre, script and style are left intact", () => {
@@ -125,12 +125,36 @@ test("code, pre, script and style are left intact", () => {
   );
 });
 
-test("Dutch text is left intact, including nested elements", () => {
+test("Dutch text is left intact, including nested elements (only phone numbers are joined)", () => {
   const html = '<p lang="nl">Vragen? Bel ons op <strong>02 435 68 45</strong>: tot \'s avonds!</p><p>Questions ?</p>';
   assert.equal(
     typographyHtml(html),
-    `<p lang="nl">Vragen? Bel ons op <strong>02 435 68 45</strong>: tot 's avonds!</p><p>Questions${NNBSP}?</p>`,
+    `<p lang="nl">Vragen? Bel ons op <strong>02${NBSP}435${NBSP}68${NBSP}45</strong>: tot 's avonds!</p><p>Questions${NNBSP}?</p>`,
   );
+});
+
+test("phone numbers shown in text never break: groups joined by no-break spaces", () => {
+  const joined = (n) => n.replaceAll(" ", NBSP);
+  for (const number of ["02 435 68 45", "02 427 75 42", "02 435 68 09", "010 23 45 67", "02 345 67 89"]) {
+    assert.equal(keepPhonesTogether(`Appelez le ${number}.`), `Appelez le ${joined(number)}.`, number);
+  }
+  // Already joined, or with a narrow space: always a no-break space in the end.
+  assert.equal(keepPhonesTogether(`02${NBSP}435\u202F68 45`), joined("02 435 68 45"));
+  // Not phone numbers: postcode and street number, dates, amounts, longer digit runs.
+  for (const text of ["1081 Koekelberg", "rue Herkoliers 17, 1081", "le 06 11 2026", "15 € par trimestre", "BE0 123 456 789 0"]) {
+    assert.equal(keepPhonesTogether(text), text, text);
+  }
+});
+
+test("phone numbers: links keep their tel: target, code is left as is, French rules still apply", () => {
+  const html = '<p>Appelez-nous au <a class="nowrap" href="tel:+3224356845">02 435 68 45</a> : merci !</p><code>02 435 68 45</code>';
+  assert.equal(
+    typographyHtml(html),
+    `<p>Appelez-nous au <a class="nowrap" href="tel:+3224356845">02${NBSP}435${NBSP}68${NBSP}45</a>${NBSP}: merci${NNBSP}!</p><code>02 435 68 45</code>`,
+  );
+  // Attributes (URLs, prefill links) are never changed.
+  const link = '<a href="/contact/?activite=02%20435">x</a><img alt="Tél. 02 435 68 45" src="a.webp">';
+  assert.match(typographyHtml(link), /href="\/contact\/\?activite=02%20435"/);
 });
 
 test("French inside Dutch is still corrected when marked lang=fr", () => {
