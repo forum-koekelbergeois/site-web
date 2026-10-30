@@ -37,10 +37,12 @@ test("blocking markers are detected, [À VENIR] is allowed", () => {
 });
 
 test("blocking markers are described with their context", () => {
-  const html = '<meta name="description" content="[DONNÉE À COMPLÉTER]"><p><em>Dernière mise à jour : [DONNÉE À COMPLÉTER]</em></p>';
+  const html = '<meta name="description" content="[DONNÉE À COMPLÉTER]"><p><em>Dernière mise à jour : [DONNÉE À COMPLÉTER]</em></p>' +
+    '<img src="/assets/placeholder.svg" alt="[DONNÉE À COMPLÉTER]" data-image="IA13">';
   assert.deepEqual(describeBlockingMarkers(html), [
     "[DONNÉE À COMPLÉTER] (métadonnées : description)",
     "[DONNÉE À COMPLÉTER] (après « …Dernière mise à jour : »)",
+    "[DONNÉE À COMPLÉTER] (texte alternatif de l’image IA13)",
   ]);
 });
 

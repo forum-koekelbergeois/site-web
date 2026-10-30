@@ -3,7 +3,7 @@ import { RenderPlugin } from "@11ty/eleventy";
 import { describeStatus, isPast, todayInBrussels, toIsoDate } from "./lib/activity-status.js";
 import { describeBlockingMarkers, findPlaceholders, isProduction } from "./lib/markers.js";
 import { typographyHtml } from "./lib/typography.js";
-import { imageHtml, findMissingImages, findMissingReferences } from "./lib/images.js";
+import { imageHtml, galleryHtml, findMissingImages, findMissingReferences } from "./lib/images.js";
 import { linkContacts } from "./lib/contact-links.js";
 import images from "./src/_data/images.js";
 import site from "./src/_data/site.js";
@@ -120,6 +120,16 @@ export default function (eleventyConfig) {
     if (!image) throw new Error(`Image inconnue : ${code} (voir src/_data/images.js)`);
     return imageHtml(image, { ...options, exists: fileExists(image.file) });
   });
+
+  eleventyConfig.addShortcode("gallery", (codes) =>
+    galleryHtml(
+      codes.map((code) => {
+        if (!images.byCode[code]) throw new Error(`Image inconnue : ${code} (voir src/_data/images.js)`);
+        return images.byCode[code];
+      }),
+      fileExists,
+    ),
+  );
 
   // Photo of an activity (fields 18 and 19), or the default image of its type.
   // On a card, the default image uses its lighter 1 200 × 630 version.

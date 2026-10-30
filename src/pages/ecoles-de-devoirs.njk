@@ -4,6 +4,7 @@ title: Écoles de devoirs à Koekelberg – Forum Koekelbergeois
 description: "Aide aux devoirs pour les enfants de la 1re primaire à la 2e secondaire, à Koekelberg. Horaires, lieux, participation et inscription sur liste d'attente."
 shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et les jeunes à Koekelberg : horaires, lieux et inscription."
 ---
+{%- set illustrations = { primaire: "IA13", intergenerationnelle: "IA14", secondaire: "IA15" } -%}
 {%- set intros = {
   intergenerationnelle: "Les enfants font leurs devoirs dans une résidence pour aînés et y partagent des moments avec les résidents."
 } -%}
@@ -14,7 +15,7 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
   <div class="cards cards--plain">
     {%- for school in site.homeworkSchools %}
     {%- set place = site.places[school.place] %}
-    <section class="card" aria-labelledby="ecole-{{ school.id }}">
+    <section class="card card--school" aria-labelledby="ecole-{{ school.id }}">
       <div class="card__body">
         <h2 id="ecole-{{ school.id }}">{{ school.name }}</h2>
         {%- if intros[school.id] %}
@@ -27,6 +28,7 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
           <li><strong>Participation</strong> : {{ school.fee }}</li>
         </ul>
       </div>
+      {% image illustrations[school.id] %}
     </section>
     {%- endfor %}
   </div>
@@ -51,15 +53,15 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
 
     <h3>Le mercredi après-midi</h3>
     <p>Un temps plus créatif et culturel : bricolage, sciences, jeux de société, cuisine, découverte du quartier… À l'école de devoirs intergénérationnelle, les enfants partagent aussi chaque mois une activité avec les résidents de {{ site.places.jourdan.name }}.</p>
-    {% image "R6", { className: "photo--small" } %}
+    {% gallery ["R6", "R61", "R63", "R64", "R65"] %}
 
     <h3>Pendant les vacances</h3>
     <p>Des stages à thème, avec des visites et des sorties. Par exemple : une semaine sur les moyens de transport, un stage sur le sport, ou des révisions avant le CE1D pour les jeunes de 2e secondaire.</p>
-    {% image "R7", { className: "photo--portrait" } %}
+    {% gallery ["R7", "R71", "R72", "R73", "R75"] %}
 
     <h3>En famille</h3>
     <p>Chaque année, une grande sortie réunit les parents, les enfants et l'équipe, comme à Technopolis ou à Pairi Daiza. Tout au long de l'année, les parents sont aussi invités à des ateliers cuisine, des goûters ou des jeux avec leurs enfants.</p>
-    {% image "R8", { className: "photo--medium" } %}
+    {% gallery ["R8", "R81"] %}
 
     <p>La participation de {{ site.homeworkFee }} aide à financer ces activités.</p>
   </section>

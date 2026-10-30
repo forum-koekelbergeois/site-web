@@ -1,7 +1,8 @@
 // Image slots (content document, annex E). Files are WebP, converted outside
 // the repository (orientation, sRGB, faces blurred where decided, no metadata)
-// and validated by Aymeric on 30/10/2026. If a file is missing, pages show a
-// neutral placeholder locally and a production build fails.
+// and validated by Aymeric on 30/10/2026 (R61 to R81: mission 4.0b). If a file
+// is missing, pages show a neutral placeholder locally and a production build
+// fails.
 
 // Size of each file in src/assets/images/ (2x the display size, never enlarged
 // beyond the original except IA1).
@@ -12,6 +13,11 @@ const FILE_SIZES = {
   R1: [720, 540], R2: [720, 960], R3: [720, 540], R4: [800, 600], R5: [1024, 768],
   R6: [568, 754], R7: [704, 939], R8: [1024, 768], R9: [920, 613], R10: [920, 613],
   R12: [740, 985], R13: [704, 937],
+  // Gallery photos: short side 480 px at most, never enlarged.
+  R61: [640, 480], R63: [556, 480], R64: [511, 384], R65: [522, 480],
+  R71: [480, 639], R72: [208, 157], R73: [480, 639], R75: [221, 166], R81: [640, 480],
+  // Files still to come: expected size of a 3:2 illustration.
+  IA13: [768, 512], IA14: [768, 512], IA15: [768, 512],
 };
 
 const slot = (code, placement, alt, { format, caption = "", share = false }) => ({
@@ -28,6 +34,8 @@ const slot = (code, placement, alt, { format, caption = "", share = false }) => 
 });
 
 const illustration = { format: "Illustration 3:2" };
+const gallery = { format: "Photo de galerie, recadrée en 4:3 à l'affichage" };
+const pending = "[DONNÉE À COMPLÉTER]";
 const typeDefault = {
   format: "Illustration 3:2 pour l'en-tête, et recadrage 1 200 × 630 pour le partage",
   share: true,
@@ -53,6 +61,9 @@ const list = [
     "Illustration : un sac à dos, des baskets, un jeu de société et un appareil photo devant un tableau d'affichage coloré.", illustration),
   slot("IA11", "Page Merci (décorative)", "", illustration),
   slot("IA12", "Page 404 (décorative)", "", illustration),
+  slot("IA13", "Écoles de devoirs, bloc École primaire", pending, illustration),
+  slot("IA14", "Écoles de devoirs, bloc École intergénérationnelle", pending, illustration),
+  slot("IA15", "Écoles de devoirs, bloc École secondaire", pending, illustration),
 
   slot("R1", "Accueil, carte École primaire",
     "Des enfants font leurs devoirs dans une salle de classe de l'école de devoirs.",
@@ -78,6 +89,24 @@ const list = [
   slot("R8", "Écoles de devoirs, en famille",
     "Les familles et l'équipe réunies lors de la grande sortie annuelle.",
     { format: "Photo 4:3 (1 024 × 768), visages des enfants floutés" }),
+  slot("R61", "Écoles de devoirs, galerie du mercredi",
+    "Des jeunes teignent des tissus avec des flacons de couleur, autour de tables couvertes de nappes.", gallery),
+  slot("R63", "Écoles de devoirs, galerie du mercredi",
+    "Des enfants font des exercices d'étirement sur une pelouse, les mains au sol.", gallery),
+  slot("R64", "Écoles de devoirs, galerie du mercredi",
+    "Des enfants jouent dans la neige, dans une cour entre deux bâtiments.", gallery),
+  slot("R65", "Écoles de devoirs, galerie du mercredi",
+    "Des enfants jouent à un jeu de société avec un monsieur âgé, autour d'une table en plein air.", gallery),
+  slot("R71", "Écoles de devoirs, galerie des vacances",
+    "Les yeux bandés et vêtus de capes, des enfants avancent en file pendant un jeu, guidés par une adulte.", gallery),
+  slot("R72", "Écoles de devoirs, galerie des vacances",
+    "Des enfants en gilet jaune visitent un atelier d'entretien de bus.", gallery),
+  slot("R73", "Écoles de devoirs, galerie des vacances",
+    "Un enfant avance sur un parcours suspendu dans les arbres, observé par un autre resté au sol.", gallery),
+  slot("R75", "Écoles de devoirs, galerie des vacances",
+    "Des enfants visitent une exposition de grandes sculptures en ballons colorés.", gallery),
+  slot("R81", "Écoles de devoirs, galerie en famille",
+    "Un grand groupe de familles pose devant l'entrée d'un parc animalier, autour d'une fontaine sculptée.", gallery),
   slot("R9", "Contact, entrée de la rue Herkoliers 17",
     "Illustration de l'entrée du Forum Koekelbergeois, rue Herkoliers 17 : une porte vitrée entourée de panneaux colorés, avec le numéro 17.",
     { format: "Illustration 3:2 (1 536 × 1 024)", caption: "Illustration" }),
@@ -93,6 +122,8 @@ const list = [
 ];
 
 export default {
+  // Slots whose file has not been supplied yet (placeholder, production blocked).
+  pending: list.filter((image) => image.alt === pending).map((image) => image.code),
   byCode: Object.fromEntries(list.map((image) => [image.code, image])),
   list,
   // Default image of each activity type (annex A, field 18).

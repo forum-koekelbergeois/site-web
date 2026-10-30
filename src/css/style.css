@@ -416,6 +416,26 @@ code {
   margin: 0;
 }
 
+/* Gallery: same 4:3 frame for every photo, centred crop. */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.gallery li {
+  margin: 0;
+}
+
+.gallery__photo {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
 .figure figcaption {
   padding: 0.375rem 1rem 0.75rem;
   color: var(--text-muted);
@@ -466,6 +486,16 @@ code {
 
 .card .photo {
   border-radius: 0;
+}
+
+/* School cards: the illustration sits at the bottom, aligned across cards. */
+.card--school {
+  display: flex;
+  flex-direction: column;
+}
+
+.card--school > .photo {
+  margin-top: auto;
 }
 
 .card__body {
@@ -828,6 +858,10 @@ thead th {
 
   .cards--plain {
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
   }
 
   .test-list {
