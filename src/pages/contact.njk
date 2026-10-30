@@ -33,20 +33,20 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
       <div class="field">
         <label for="nom">Votre nom et prénom <span class="field-required">(obligatoire)</span></label>
         <input id="nom" name="nom" type="text" autocomplete="name" maxlength="100" required>
-        <p class="field-error" id="erreur-nom" data-message hidden>Merci d'indiquer votre nom.</p>
+        <p class="field-error" id="erreur-nom" hidden>Merci d'indiquer votre nom.</p>
       </div>
 
       <div class="field">
         <label for="telephone">Votre téléphone <span class="field-required">(obligatoire)</span></label>
         <input id="telephone" name="telephone" type="tel" autocomplete="tel" maxlength="30" required aria-describedby="aide-telephone">
-        <p class="field-error" id="erreur-telephone" data-message hidden>Merci d'indiquer un numéro de téléphone pour que nous puissions vous répondre.</p>
+        <p class="field-error" id="erreur-telephone" hidden>Merci d'indiquer un numéro de téléphone pour que nous puissions vous répondre.</p>
         <p class="field-help" id="aide-telephone">Nous vous rappelons ou vous écrivons par SMS ou WhatsApp.</p>
       </div>
 
       <div class="field">
         <label for="email">Votre e-mail</label>
         <input id="email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="aide-email">
-        <p class="field-error" id="erreur-email" hidden></p>
+        <p class="field-error" id="erreur-email" hidden>Cette adresse e-mail semble incomplète. Vérifiez-la, ou laissez ce champ vide.</p>
         <p class="field-help" id="aide-email">Si vous préférez une réponse par e-mail.</p>
       </div>
 
@@ -88,7 +88,7 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
       <div class="field field--check">
         <input id="consentement" name="consentement" type="checkbox" value="oui" required aria-describedby="aide-consentement">
         <label for="consentement">J'accepte que le Forum Koekelbergeois utilise ces informations pour répondre à ma demande. <span class="field-required">(obligatoire)</span></label>
-        <p class="field-error" id="erreur-consentement" data-message hidden>Merci de cocher la case : sans votre accord, nous ne pouvons pas vous répondre.</p>
+        <p class="field-error" id="erreur-consentement" hidden>Merci de cocher la case : sans votre accord, nous ne pouvons pas vous répondre.</p>
         <p class="field-help" id="aide-consentement">En savoir plus : <a class="more" href="/mentions-legales/#vie-privee">Vie privée →</a></p>
       </div>
 

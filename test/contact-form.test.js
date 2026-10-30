@@ -49,7 +49,7 @@ function makePage() {
   const errors = Object.fromEntries(
     ["nom", "telephone", "email", "consentement"].map((name) => [
       `erreur-${name}`,
-      { id: `erreur-${name}`, hidden: true, textContent: name === "email" ? "" : `ANNEXE C ${name}`, dataset: name === "email" ? {} : { message: "" } },
+      { id: `erreur-${name}`, hidden: true, textContent: `TEXTE DE LA PAGE ${name}` },
     ]),
   );
   const alert = { children: [], replaceChildren(...nodes) { this.children = nodes; } };
@@ -126,6 +126,7 @@ test("prefill: HTML in « activite » stays plain text, control characters and l
 test("the prefill code never writes HTML", async () => {
   const source = (await import("node:fs")).readFileSync("lib/contact-form.js", "utf8");
   assert.doesNotMatch(source, /innerHTML|outerHTML|insertAdjacentHTML|document\.write/);
+  assert.doesNotMatch(source, /validationMessage|setCustomValidity|reportValidity/, "browser messages are never used");
 });
 
 test("empty form: the three annex C messages show, focus goes to the name", async () => {
@@ -136,8 +137,8 @@ test("empty form: the three annex C messages show, focus goes to the name", asyn
     Object.entries(page.errors).filter(([, e]) => !e.hidden).map(([id]) => id),
     ["erreur-nom", "erreur-telephone", "erreur-consentement"],
   );
-  assert.equal(page.errors["erreur-nom"].textContent, "ANNEXE C nom", "the message written in the page is kept");
-  assert.equal(page.errors["erreur-consentement"].textContent, "ANNEXE C consentement");
+  assert.equal(page.errors["erreur-nom"].textContent, "TEXTE DE LA PAGE nom", "the message written in the page is kept");
+  assert.equal(page.errors["erreur-consentement"].textContent, "TEXTE DE LA PAGE consentement");
   assert.equal(page.f.nom.focused, true);
   assert.equal(page.f.nom.getAttribute("aria-invalid"), "true");
   assert.equal(page.f.nom.getAttribute("aria-describedby"), "erreur-nom");
@@ -160,12 +161,13 @@ test("only the missing field is reported, and the message goes away once fixed",
   assert.equal(page.f.telephone.getAttribute("aria-describedby"), "aide-telephone");
 });
 
-test("a wrong e-mail uses the browser's message (annex C has none)", async () => {
+test("a wrong e-mail shows the message written in the page, never the browser's", async () => {
   const page = makePage();
   fill(page);
   page.f.email.value = "pas-une-adresse";
   assert.equal(await submit(page.form, page.doc, makeWindow()), "invalid");
-  assert.equal(page.errors["erreur-email"].textContent, "Adresse e-mail incorrecte (message du navigateur)");
+  assert.equal(page.errors["erreur-email"].hidden, false);
+  assert.equal(page.errors["erreur-email"].textContent, "TEXTE DE LA PAGE email");
   assert.equal(page.f.email.focused, true);
 });
 
@@ -265,6 +267,41 @@ test("built page: the annex C fields, in order, with labels and required ones", 
   assert.deepEqual([...form.matchAll(/<option value="([^"]+)"/g)].map((m) => m[1]),
     ["Une activité", "L'école de devoirs", "Les cours de français", "Devenir volontaire", "Autre question"]);
   assert.match(form, /<button class="button" type="submit" data-sending="Envoi en cours…">Envoyer<\/button>/);
+});
+
+// Annex C messages, with the French typography applied to the page; the e-mail
+// one is a [PROPOSITION À VALIDER] (NOTES-CONTENU.md, point 37).
+const NBSP = "\u00A0";
+const MESSAGES = {
+  nom: "Merci d’indiquer votre nom.",
+  telephone: "Merci d’indiquer un numéro de téléphone pour que nous puissions vous répondre.",
+  consentement: `Merci de cocher la case${NBSP}: sans votre accord, nous ne pouvons pas vous répondre.`,
+  email: "Cette adresse e-mail semble incomplète. Vérifiez-la, ou laissez ce champ vide.",
+};
+
+test("messages shown by the real /js/contact.js are exactly the annex C texts", async () => {
+  const html = await built;
+  const { default: Template } = await import("../src/js/contact.11ty.js");
+  const code = new Template().render();
+  const decode = (t) => t.replace(/&nbsp;/g, NBSP).replace(/&#39;/g, "'").replace(/&amp;/g, "&");
+  const shown = (page) => Object.values(page.errors).filter((e) => !e.hidden).map((e) => e.textContent);
+  const run = async (prepare) => {
+    const page = makePage();
+    for (const error of Object.values(page.errors)) {
+      const match = html.match(new RegExp(`<p class="field-error" id="${error.id}" hidden>([^<]*)</p>`));
+      assert.ok(match, `${error.id} written in the page`);
+      error.textContent = decode(match[1]);
+    }
+    prepare(page);
+    vm.runInNewContext(code, { document: page.doc, window: makeWindow(), URLSearchParams });
+    page.form.listeners.submit({ preventDefault() {} });
+    await new Promise((resolve) => setImmediate(resolve));
+    return page;
+  };
+  const empty = await run(() => {});
+  assert.deepEqual(shown(empty), [MESSAGES.nom, MESSAGES.telephone, MESSAGES.consentement]);
+  const wrongEmail = await run((page) => { fill(page); page.f.email.value = "julie@"; });
+  assert.deepEqual(shown(wrongEmail), [MESSAGES.email]);
 });
 
 test("built page: no address or health field", async () => {
