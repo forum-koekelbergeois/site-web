@@ -121,7 +121,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addShortcode("image", (code, options = {}) => {
     const image = images.byCode[code];
     if (!image) throw new Error(`Image inconnue : ${code} (voir src/_data/images.js)`);
-    return imageHtml(image, { ...options, exists: fileExists(image.file) });
+    return imageHtml(image, { ...options, exists: fileExists });
   });
 
   eleventyConfig.addShortcode("gallery", (codes) =>
@@ -144,7 +144,7 @@ export default function (eleventyConfig) {
       : options.card
         ? { ...typeImage, file: typeImage.share, width: 1200, height: 630 }
         : typeImage;
-    return imageHtml(image, { ...options, exists: fileExists(image.file) });
+    return imageHtml(image, { sizes: options.card ? "card" : "content", ...options, exists: fileExists });
   });
 
   eleventyConfig.addFilter("linkContacts", linkContacts);

@@ -28,7 +28,7 @@ shareText: "Après l'école, nos écoles de devoirs accueillent les enfants et l
           <li><strong>Participation</strong> : {{ school.fee }}</li>
         </ul>
       </div>
-      {% image illustrations[school.id] %}
+      {% image illustrations[school.id], { sizes: "card" } %}
     </section>
     {%- endfor %}
   </div>

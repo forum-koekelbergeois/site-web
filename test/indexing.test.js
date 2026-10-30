@@ -1,25 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { buildSite } from "./helpers/build.js";
 
-// Builds the site with a given CONTEXT into a temporary folder. A production
-// build may stop on blocking markers after writing its files: the files are
-// what is checked here.
 function build(context) {
-  const output = mkdtempSync(join(tmpdir(), `site-${context}-`));
-  spawnSync(process.execPath, ["node_modules/@11ty/eleventy/cmd.cjs", `--output=${output}`, "--quiet"], {
-    env: { ...process.env, CONTEXT: context },
-    encoding: "utf8",
-  });
-  const pages = readdirSync(output, { recursive: true })
-    .filter((file) => file.endsWith(".html"))
-    .map((file) => ({ url: `/${file.replace(/index\.html$/, "")}`, html: readFileSync(join(output, file), "utf8") }));
-  const robots = readFileSync(join(output, "robots.txt"), "utf8");
-  rmSync(output, { recursive: true, force: true });
-  return { pages, robots };
+  const site = buildSite(context);
+  site.remove();
+  return site;
 }
 
 const robotsMeta = (html) => html.match(/<meta name="robots" content="([^"]*)">/g) ?? [];

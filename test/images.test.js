@@ -81,15 +81,53 @@ test("no WebP file of the site contains metadata (EXIF, XMP, ICC)", () => {
   }
 });
 
+// Smaller versions (scripts/make_responsive.py), named <name>-<width>w.webp.
+const VERSION = /^(.+)-(\d+)w\.webp$/;
+
+test("each smaller version keeps the crop, is smaller, and has no metadata", () => {
+  const dir = "src/assets/images";
+  const versions = readdirSync(dir).filter((f) => VERSION.test(f));
+  assert.ok(versions.length >= 100, `${versions.length} versions`);
+  for (const file of versions) {
+    const [, base, width] = file.match(VERSION);
+    const source = webpInfo(`${dir}/${base}.webp`);
+    const version = webpInfo(`${dir}/${file}`);
+    assert.equal(version.size[0], Number(width), file);
+    assert.ok(version.size[0] < source.size[0], `${file} not enlarged`);
+    const expectedHeight = Math.round((source.size[1] * version.size[0]) / source.size[0]);
+    assert.ok(Math.abs(version.size[1] - expectedHeight) <= 1, `${file} same aspect ratio`);
+    assert.deepEqual(version.metadata, [], file);
+  }
+  assert.deepEqual(webpInfo("src/assets/logo-forum-koekelbergeois-320w.webp").metadata, []);
+});
+
+test("every version comes from an image of images.js or a share image", () => {
+  const known = new Set(images.list.flatMap((i) => [i.file, i.share].filter(Boolean)).map((f) => f.split("/").pop()));
+  for (const file of readdirSync("src/assets/images").filter((f) => VERSION.test(f))) {
+    assert.ok(known.has(`${file.match(VERSION)[1]}.webp`), file);
+  }
+});
+
+test("srcset lists the existing versions and the file itself, with the layout's sizes", () => {
+  const image = images.byCode.R9;
+  const files = new Set([image.file, "/assets/images/r9-320w.webp", "/assets/images/r9-720w.webp"]);
+  const html = imageHtml(image, { exists: (f) => files.has(f), sizes: "place" });
+  assert.match(html, /srcset="\/assets\/images\/r9-320w\.webp 320w, \/assets\/images\/r9-720w\.webp 720w, \/assets\/images\/r9\.webp 920w"/);
+  assert.match(html, /sizes="\(min-width: 48rem\) 29rem, calc\(100vw - 2rem\)"/);
+  assert.match(html, /src="\/assets\/images\/r9\.webp"/);
+  assert.doesNotMatch(imageHtml(image, { exists: (f) => f === image.file }), /srcset/, "no version, no srcset");
+  assert.doesNotMatch(imageHtml(image, { exists: () => false }), /srcset/, "placeholder, no srcset");
+});
+
 test("a missing file gives a placeholder that is reported", () => {
-  const html = imageHtml(images.byCode.R9, { exists: false });
+  const html = imageHtml(images.byCode.R9, { exists: () => false });
   assert.match(html, /src="\/assets\/placeholder.svg"/);
   assert.match(html, /<figcaption>Illustration<\/figcaption>/);
   assert.deepEqual(findMissingImages(html), ["R9 (/assets/images/r9.webp)"]);
 });
 
 test("an existing file is used and not reported", () => {
-  const html = imageHtml(images.byCode.IA11, { exists: true });
+  const html = imageHtml(images.byCode.IA11, { exists: (file) => file === images.byCode.IA11.file });
   assert.match(html, /src="\/assets\/images\/ia11.webp" width="768" height="512" alt=""/);
   assert.deepEqual(findMissingImages(html), []);
 });
@@ -110,7 +148,9 @@ test("a gallery is a list of lazy-loaded images with their size", () => {
   assert.match(html, /^<ul class="gallery" role="list">(<li><img [^>]+><\/li>){3}<\/ul>$/);
   assert.equal(html.match(/class="photo gallery__photo"/g).length, 3);
   assert.equal(html.match(/loading="lazy"/g).length, 3);
-  assert.match(html, /src="\/assets\/images\/r81.webp" width="640" height="480"/);
+  assert.match(html, /src="\/assets\/images\/r81.webp" srcset="[^"]+" sizes="\(min-width: 48rem\) 15rem, calc\(50vw - 1\.25rem\)" width="640" height="480"/);
+  const wide = galleryHtml([images.byCode.R77], () => true);
+  assert.match(wide, /sizes="\(min-width: 48rem\) calc\(15rem \* 1\.99\), calc\(\(50vw - 1\.25rem\) \* 1\.99\)"/, "R77 is cropped by its height");
   assert.deepEqual(findMissingImages(html), ["IA13 (/assets/images/ia13.webp)"]);
 });
 

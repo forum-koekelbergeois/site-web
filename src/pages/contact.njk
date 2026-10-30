@@ -119,7 +119,7 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
           </dl>
           <p><a class="more" href="{{ place.mapUrl }}" target="_blank" rel="noopener noreferrer" aria-describedby="lieu-{{ id }}">{{ site.ui.mapLink }}<span class="visually-hidden">{{ site.ui.mapLinkHint }}</span></a></p>
         </div>
-        {% image placeImages[id] %}
+        {% image placeImages[id], { sizes: "place" } %}
       </section>
       {%- endfor %}
     </div>
