@@ -31,11 +31,14 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addPlugin(RenderPlugin);
 
+  // Only a production build (CONTEXT=production, set by Netlify) may be
+  // indexed: robots.txt and the robots meta tag depend on it.
+  eleventyConfig.addGlobalData("production", production);
+
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy({
     "src/assets/favicon.ico": "favicon.ico",
-    "src/robots.txt": "robots.txt",
   });
   eleventyConfig.ignores.add("src/assets-source/**");
 

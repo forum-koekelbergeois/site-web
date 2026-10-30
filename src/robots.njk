@@ -1,0 +1,15 @@
+---
+permalink: /robots.txt
+eleventyExcludeFromCollections: true
+---
+{#- Only the production site may be indexed; test versions (branch deploys,
+    previews, local builds) forbid everything. -#}
+{%- if production -%}
+User-agent: *
+Allow: /
+
+Sitemap: {{ site.url }}/sitemap.xml
+{% else -%}
+User-agent: *
+Disallow: /
+{% endif -%}

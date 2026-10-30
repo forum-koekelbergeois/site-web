@@ -6,7 +6,9 @@
   <meta name="color-scheme" content="light">
   <title>{{ metaTitle or title }}</title>
   <meta name="description" content="{{ description }}">
-  {%- if noindex %}
+  {%- if not production %}
+  <meta name="robots" content="noindex, nofollow">
+  {%- elif noindex %}
   <meta name="robots" content="noindex">
   {%- endif %}
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
