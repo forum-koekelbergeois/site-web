@@ -31,8 +31,8 @@ const TOPICS = [
 ];
 
 function makePage() {
-  const demande = makeField({ name: "demande", required: true, value: "Autre question" });
-  demande.options = TOPICS.map(([value, topic]) => ({ value, dataset: topic ? { topic } : {} }));
+  const demande = makeField({ name: "demande", required: true, value: "" });
+  demande.options = [{ value: "", dataset: {} }, ...TOPICS.map(([value, topic]) => ({ value, dataset: topic ? { topic } : {} }))];
   const fields = [
     makeField({ name: "form-name", type: "hidden", value: "contact" }),
     makeField({ name: "bot-field" }),
@@ -47,7 +47,7 @@ function makePage() {
   ];
   const elements = Object.assign([...fields], Object.fromEntries(fields.filter((f) => f.name).map((f) => [f.name, f])));
   const errors = Object.fromEntries(
-    ["nom", "telephone", "email", "consentement"].map((name) => [
+    ["nom", "telephone", "email", "demande", "consentement"].map((name) => [
       `erreur-${name}`,
       { id: `erreur-${name}`, hidden: true, textContent: `TEXTE DE LA PAGE ${name}` },
     ]),
@@ -74,6 +74,7 @@ function makePage() {
 function fill({ f }) {
   f.nom.value = "Awa Diallo";
   f.telephone.value = "02 000 00 00";
+  f.demande.value = "Autre question";
   f.consentement.checked = true;
 }
 
@@ -109,7 +110,7 @@ test("prefill: an unknown topic is ignored", () => {
   for (const search of ["?demande=inconnu", "?demande=Autre%20question", "?demande=", "?demande=__proto__", "?nom=Test"]) {
     const page = makePage();
     prefill(page.form, search);
-    assert.equal(page.f.demande.value, "Autre question", search);
+    assert.equal(page.f.demande.value, "", search);
     assert.equal(page.f.nom.value, "", search);
   }
 });
@@ -118,7 +119,7 @@ test("prefill: HTML in « activite » stays plain text, control characters and l
   const page = makePage();
   prefill(page.form, "?demande=inconnu&activite=%3Cb%3Etest%3C%2Fb%3E");
   assert.equal(page.f.activite.value, "<b>test</b>");
-  assert.equal(page.f.demande.value, "Autre question");
+  assert.equal(page.f.demande.value, "");
   assert.equal(cleanActivity("a\u0000b\nc\u007Fd\u009Be"), "a b c d e");
   assert.equal(cleanActivity("x".repeat(500)).length, 200);
 });
@@ -129,13 +130,13 @@ test("the prefill code never writes HTML", async () => {
   assert.doesNotMatch(source, /validationMessage|setCustomValidity|reportValidity/, "browser messages are never used");
 });
 
-test("empty form: the three annex C messages show, focus goes to the name", async () => {
+test("empty form: the four annex C messages show, focus goes to the name", async () => {
   const page = makePage();
   const result = await submit(page.form, page.doc, makeWindow());
   assert.equal(result, "invalid");
   assert.deepEqual(
     Object.entries(page.errors).filter(([, e]) => !e.hidden).map(([id]) => id),
-    ["erreur-nom", "erreur-telephone", "erreur-consentement"],
+    ["erreur-nom", "erreur-telephone", "erreur-demande", "erreur-consentement"],
   );
   assert.equal(page.errors["erreur-nom"].textContent, "TEXTE DE LA PAGE nom", "the message written in the page is kept");
   assert.equal(page.errors["erreur-consentement"].textContent, "TEXTE DE LA PAGE consentement");
@@ -264,8 +265,8 @@ test("built page: the annex C fields, in order, with labels and required ones", 
   for (const id of [...form.matchAll(/aria-describedby="([^"]+)"/g)].map((m) => m[1])) {
     assert.match(form, new RegExp(`id="${id}"`), id);
   }
-  assert.deepEqual([...form.matchAll(/<option value="([^"]+)"/g)].map((m) => m[1]),
-    ["Une activité", "L'école de devoirs", "Les cours de français", "Devenir volontaire", "Autre question"]);
+  assert.deepEqual([...form.matchAll(/<option value="([^"]*)"/g)].map((m) => m[1]),
+    ["", "Une activité", "L'école de devoirs", "Les cours de français", "Devenir volontaire", "Autre question"]);
   assert.match(form, /<button class="button" type="submit" data-sending="Envoi en cours…">Envoyer<\/button>/);
 });
 
@@ -275,6 +276,7 @@ const NBSP = "\u00A0";
 const MESSAGES = {
   nom: "Merci d’indiquer votre nom.",
   telephone: "Merci d’indiquer un numéro de téléphone pour que nous puissions vous répondre.",
+  demande: "Merci d’indiquer l’objet de votre demande.",
   consentement: `Merci de cocher la case${NBSP}: sans votre accord, nous ne pouvons pas vous répondre.`,
   email: "Cette adresse e-mail semble incomplète. Vérifiez-la, ou laissez ce champ vide.",
 };
@@ -299,9 +301,22 @@ test("messages shown by the real /js/contact.js are exactly the annex C texts", 
     return page;
   };
   const empty = await run(() => {});
-  assert.deepEqual(shown(empty), [MESSAGES.nom, MESSAGES.telephone, MESSAGES.consentement]);
+  assert.deepEqual(shown(empty), [MESSAGES.nom, MESSAGES.telephone, MESSAGES.demande, MESSAGES.consentement]);
+  const noTopic = await run((page) => { fill(page); page.f.demande.value = ""; });
+  assert.deepEqual(shown(noTopic), [MESSAGES.demande]);
   const wrongEmail = await run((page) => { fill(page); page.f.email.value = "julie@"; });
   assert.deepEqual(shown(wrongEmail), [MESSAGES.email]);
+});
+
+test("built page: nothing chosen by default in « Votre demande concerne », and the field is required", async () => {
+  const html = await built;
+  const select = html.match(/<select [^>]*name="demande"[^>]*>([\s\S]*?)<\/select>/);
+  assert.ok(select, "select demande");
+  assert.match(select[0], /^<select [^>]*\srequired[\s>]/, "required on the select");
+  const options = [...select[1].matchAll(/<option ([^>]*)>([^<]*)<\/option>/g)];
+  assert.equal(options[0][0], '<option value="" disabled selected>Choisissez dans la liste</option>');
+  assert.deepEqual(options.filter(([, attributes]) => /\bselected\b/.test(attributes)).length, 1, "only the first line is selected");
+  assert.deepEqual(options.filter(([, attributes]) => /\bdisabled\b/.test(attributes)).length, 1);
 });
 
 test("built page: no address or health field", async () => {

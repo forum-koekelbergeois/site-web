@@ -53,12 +53,14 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
       <div class="field">
         <label for="demande">Votre demande concerne <span class="field-required">(obligatoire)</span></label>
         <select id="demande" name="demande" required>
+          <option value="" disabled selected>Choisissez dans la liste</option>
           <option value="Une activité" data-topic="{{ site.contactTopics.activity }}">Une activité</option>
           <option value="L'école de devoirs" data-topic="{{ site.contactTopics.homework }}">L'école de devoirs</option>
           <option value="Les cours de français" data-topic="{{ site.contactTopics.frenchClasses }}">Les cours de français</option>
           <option value="Devenir volontaire" data-topic="{{ site.contactTopics.volunteer }}">Devenir volontaire</option>
-          <option value="Autre question" selected>Autre question</option>
+          <option value="Autre question">Autre question</option>
         </select>
+        <p class="field-error" id="erreur-demande" hidden>Merci d'indiquer l'objet de votre demande.</p>
       </div>
 
       <div class="field">
