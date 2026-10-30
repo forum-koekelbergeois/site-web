@@ -3,6 +3,7 @@ permalink: /contact/
 title: Contact – Forum Koekelbergeois
 eleventyComputed:
   description: "Appelez-nous au {{ site.phone.display }}, {{ site.phone.hours }}, écrivez-nous ou laissez-nous un message. Forum Koekelbergeois, {{ site.places.forum.street }}."
+contactScript: true
 shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-nous ou laissez-nous un message."
 ---
 {%- set placeImages = { forum: "R9", jourdan: "R10" } -%}
@@ -22,9 +23,79 @@ shareText: "Une question sur nos écoles de devoirs ou nos activités ? Appelez-
   <section class="section" aria-labelledby="par-message">
     <h2 id="par-message">Par message</h2>
     <p>Remplissez le formulaire ci-dessous : nous vous répondons {{ site.email.replyDelay }}.</p>
-    <div class="placeholder-block" id="formulaire" tabindex="-1" data-placeholder="Formulaire : tâche 4.5">
-      <p>Formulaire : tâche 4.5</p>
-    </div>
+    {#- Netlify detects this form at deploy time. The "name" attributes appear
+        in the notification e-mails, hence readable French. /js/contact.js adds
+        the prefill, the annex C messages and background sending. -#}
+    <form class="contact-form" id="formulaire" name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="contact">
+      <p class="form-trap" aria-hidden="true"><label>Ne remplissez pas ce champ <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+      <div class="field">
+        <label for="nom">Votre nom et prénom <span class="field-required">(obligatoire)</span></label>
+        <input id="nom" name="nom" type="text" autocomplete="name" maxlength="100" required>
+        <p class="field-error" id="erreur-nom" data-message hidden>Merci d'indiquer votre nom.</p>
+      </div>
+
+      <div class="field">
+        <label for="telephone">Votre téléphone <span class="field-required">(obligatoire)</span></label>
+        <input id="telephone" name="telephone" type="tel" autocomplete="tel" maxlength="30" required aria-describedby="aide-telephone">
+        <p class="field-error" id="erreur-telephone" data-message hidden>Merci d'indiquer un numéro de téléphone pour que nous puissions vous répondre.</p>
+        <p class="field-help" id="aide-telephone">Nous vous rappelons ou vous écrivons par SMS ou WhatsApp.</p>
+      </div>
+
+      <div class="field">
+        <label for="email">Votre e-mail</label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="aide-email">
+        <p class="field-error" id="erreur-email" hidden></p>
+        <p class="field-help" id="aide-email">Si vous préférez une réponse par e-mail.</p>
+      </div>
+
+      <div class="field">
+        <label for="demande">Votre demande concerne <span class="field-required">(obligatoire)</span></label>
+        <select id="demande" name="demande" required>
+          <option value="Une activité" data-topic="{{ site.contactTopics.activity }}">Une activité</option>
+          <option value="L'école de devoirs" data-topic="{{ site.contactTopics.homework }}">L'école de devoirs</option>
+          <option value="Les cours de français" data-topic="{{ site.contactTopics.frenchClasses }}">Les cours de français</option>
+          <option value="Devenir volontaire" data-topic="{{ site.contactTopics.volunteer }}">Devenir volontaire</option>
+          <option value="Autre question" selected>Autre question</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="activite">Activité</label>
+        <input id="activite" name="activite" type="text" maxlength="200" aria-describedby="aide-activite">
+        <p class="field-help" id="aide-activite">Rempli automatiquement quand vous venez de la page d'une activité.</p>
+      </div>
+
+      <div class="field">
+        <label for="prenom-enfant">Prénom de l'enfant</label>
+        <input id="prenom-enfant" name="prenom-enfant" type="text" maxlength="50" aria-describedby="aide-prenom-enfant">
+        <p class="field-help" id="aide-prenom-enfant">Si votre message concerne un enfant.</p>
+      </div>
+
+      <div class="field">
+        <label for="age-enfant">Âge ou année scolaire de l'enfant</label>
+        <input id="age-enfant" name="age-enfant" type="text" maxlength="50" aria-describedby="aide-age-enfant">
+        <p class="field-help" id="aide-age-enfant">Par exemple : 8 ans, ou 3e primaire.</p>
+      </div>
+
+      <div class="field">
+        <label for="message">Votre message</label>
+        <textarea id="message" name="message" rows="6" maxlength="2000" aria-describedby="aide-message"></textarea>
+        <p class="field-help" id="aide-message">Par exemple : « Je voudrais inscrire mon fils à l'atelier du 6 novembre. »</p>
+      </div>
+
+      <div class="field field--check">
+        <input id="consentement" name="consentement" type="checkbox" value="oui" required aria-describedby="aide-consentement">
+        <label for="consentement">J'accepte que le Forum Koekelbergeois utilise ces informations pour répondre à ma demande. <span class="field-required">(obligatoire)</span></label>
+        <p class="field-error" id="erreur-consentement" data-message hidden>Merci de cocher la case : sans votre accord, nous ne pouvons pas vous répondre.</p>
+        <p class="field-help" id="aide-consentement">En savoir plus : <a class="more" href="/mentions-legales/#vie-privee">Vie privée →</a></p>
+      </div>
+
+      <div class="form-alert" role="alert" data-form-alert></div>
+      <template id="formulaire-echec"><p>{{ site.form.error | linkContacts | safe }}</p></template>
+      <p><button class="button" type="submit" data-sending="{{ site.form.sending }}">Envoyer</button></p>
+    </form>
     <p class="small">Nous utilisons vos informations uniquement pour répondre à votre demande. En savoir plus : <a class="more" href="/mentions-legales/#vie-privee">Vie privée →</a></p>
   </section>
 

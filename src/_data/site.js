@@ -118,7 +118,8 @@ export default {
     height: 128,
   },
 
-  // Topics of the contact form (annex C), used in prefill links (task 4.5).
+  // Topics of the contact form (annex C), carried by the prefill links and by
+  // the data-topic of the form options.
   contactTopics: {
     activity: "activite",
     homework: "ecole-de-devoirs",
@@ -138,7 +139,7 @@ export default {
     imageCaption: "Illustration",
   },
 
-  // Contact form texts, used in task 4.5.
+  // Contact form texts (content document, "Textes techniques").
   form: {
     sending: "Envoi en cours…",
     error: `Votre message n'a pas pu être envoyé. Réessayez ou appelez-nous au ${phone.display}.`,

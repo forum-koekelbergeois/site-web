@@ -1,16 +1,7 @@
 // Builds /js/activites.js: the status module and its browser side in one
 // dependency-free file, so the browser runs the same code as the build.
-import { readFileSync } from "node:fs";
+import { libSource as source } from "../../lib/bundle.js";
 import { isProduction } from "../../lib/markers.js";
-
-const source = (file) =>
-  readFileSync(new URL(`../../lib/${file}`, import.meta.url), "utf8")
-    .replace(/^import .*$/gm, "")
-    .replace(/^export /gm, "")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith("//"))
-    .join("\n");
 
 // Outside production only: ?date-test=2026-11-21 simulates the date of the day.
 const today = isProduction()

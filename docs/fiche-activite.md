@@ -101,7 +101,7 @@ Calculé par `lib/activity-status.js` pour la date du jour à Bruxelles :
 
 ## Liens de pré-remplissage du formulaire de contact
 
-Format fixe pour les quatre cas de l'annexe C (le formulaire arrive en 4.5) :
+Format fixe pour les quatre cas de l'annexe C :
 
 | Lien de départ | Adresse |
 |---|---|
@@ -111,3 +111,5 @@ Format fixe pour les quatre cas de l'annexe C (le formulaire arrive en 4.5) :
 | Devenir volontaire (accueil) | `/contact/?demande=volontaire#formulaire` |
 
 Pour une activité, la valeur de `activite` est « Inscription : [titre] ([date de début]) », avec la date en toutes lettres, par exemple « Inscription : L'IA et les devoirs de mes enfants (6 novembre 2026) ». Aucune donnée personnelle dans l'adresse : seulement le type de demande, le titre et la date de l'activité.
+
+Le script `/js/contact.js` (code dans `lib/contact-form.js`) ne lit que ces deux paramètres. Une valeur de `demande` inconnue est ignorée (le choix reste « Autre question ») ; `activite` est recopiée comme texte brut, sur une ligne, 200 caractères au plus. Sans JavaScript, le formulaire s'envoie normalement, sans pré-remplissage.
