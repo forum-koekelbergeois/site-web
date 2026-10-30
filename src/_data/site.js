@@ -147,5 +147,5 @@ export default {
 
   // "Dernière mise à jour" of the privacy page, e.g. "15 novembre 2026".
   // Empty until the site goes live: the page then shows a blocking marker.
-  privacyUpdated: "",
+  privacyUpdated: "30 octobre 2026",
 };

@@ -3,6 +3,7 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { buildSite } from "./helpers/build.js";
+import siteData from "../src/_data/site.js";
 
 const site = buildSite("production");
 after(() => site.remove());
@@ -23,11 +24,15 @@ function target(path) {
   return clean;
 }
 
-test("production build: the only blocker left is the privacy page date", () => {
-  const items = site.log.split("\n").filter((line) => /^\[11ty\]\s+- /.test(line));
-  const unique = [...new Set(items)];
-  assert.equal(unique.length, 1, unique.join("\n"));
-  assert.match(unique[0], /DONNÉE À COMPLÉTER.*Dernière mise à jour/);
+test("production build: no blocker, except the privacy page date while it is empty", () => {
+  const items = [...new Set(site.log.split("\n").filter((line) => /^\[11ty\]\s+- /.test(line)))];
+  if (siteData.privacyUpdated) {
+    assert.deepEqual(items, []);
+    assert.doesNotMatch(site.log, /Mise en ligne impossible/);
+  } else {
+    assert.equal(items.length, 1, items.join("\n"));
+    assert.match(items[0], /DONNÉE À COMPLÉTER.*Dernière mise à jour/);
+  }
 });
 
 test("every internal link, image and anchor points to something that exists", () => {

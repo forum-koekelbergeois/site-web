@@ -11,7 +11,7 @@ Le {{ site.legalName }}, {{ site.places.forum.address }}. E-mail : [{{ site.emai
 
 ### Ce que nous recueillons
 
-Uniquement ce que vous écrivez dans le formulaire de contact : votre nom et prénom, votre téléphone, votre e-mail si vous le donnez, l'objet de votre demande, l'activité concernée, le prénom et l'âge ou l'année scolaire de votre enfant si vous les indiquez, et votre message.
+Ce que vous écrivez dans le formulaire de contact : votre nom et prénom, votre téléphone, votre e-mail si vous le donnez, l'objet de votre demande, l'activité concernée, le prénom et l'âge ou l'année scolaire de votre enfant si vous les indiquez, et votre message. Au moment de l'envoi, Netlify enregistre aussi automatiquement avec votre message l'adresse IP de votre connexion, le type de navigateur utilisé et la page d'où vous nous avez écrit. Ces données techniques servent uniquement à protéger le formulaire contre le spam et les abus. Nous ne recueillons rien d'autre.
 
 Nous ne demandons ni votre adresse ni d'information sur la santé. Merci de ne pas en écrire dans votre message.
 
@@ -23,11 +23,13 @@ Pour répondre à votre demande : une inscription, une question ou une propositi
 
 Votre accord, que vous donnez en cochant la case du formulaire. Vous pouvez le retirer à tout moment.
 
+Les données techniques enregistrées avec votre message (adresse IP, navigateur, page d'origine) et l'analyse anti-spam de chaque message reposent, elles, sur notre intérêt légitime à protéger le formulaire contre les abus (article 6.1.f du RGPD) : elles ne dépendent pas de la case cochée.
+
 ### Qui reçoit vos informations
 
 - Notre équipe.
 - Netlify, Inc. (États-Unis), qui héberge le site et reçoit les messages du formulaire. Le transfert vers les États-Unis est encadré par le EU-US Data Privacy Framework et par des clauses contractuelles types.
-- Akismet (Automattic, Inc., États-Unis), le filtre anti-spam utilisé par Netlify, qui analyse chaque message.
+- Akismet (Automattic, Inc., États-Unis), le filtre anti-spam auquel Netlify fait appel : il analyse chaque message et reçoit pour cela son contenu et l'adresse IP de l'envoi, ainsi que, le cas échéant, le type de navigateur et la page d'origine.
 - Nos messageries : [{{ site.email.address }}](mailto:{{ site.email.address }}), fournie par la Commune de Koekelberg, et une boîte Gmail de l'ASBL (Google).
 - WhatsApp (Meta), si nous vous répondons par ce moyen.
 - Notre liste d'attente de l'école de devoirs, tenue dans un fichier sur un ordinateur du Forum.
@@ -36,7 +38,7 @@ Votre accord, que vous donnez en cochant la case du formulaire. Vous pouvez le r
 
 | Où | Durée |
 |---|---|
-| Messages reçus par le site (Netlify) | Supprimés chaque mois |
+| Messages reçus par le site (Netlify), avec les données techniques enregistrées avec eux | Supprimés chaque mois |
 | E-mails, SMS et WhatsApp | Supprimés 12 mois après notre dernier échange |
 | Liste d'attente de l'école de devoirs | Tant que votre enfant y figure. Retirés quand vous renoncez, ou quand votre enfant n'a plus l'âge d'être accueilli. |
 | Enfant inscrit | Les informations rejoignent son dossier d'inscription. |
@@ -49,6 +51,6 @@ Si vous estimez que vos droits ne sont pas respectés, vous pouvez porter plaint
 
 ### Cookies et statistiques
 
-Ce site n'utilise aucun cookie et ne mesure pas sa fréquentation. Comme tout hébergeur, Netlify enregistre l'adresse IP des visiteurs pour faire fonctionner et protéger le site. Les liens « Voir sur la carte » ouvrent le site OpenStreetMap, qui applique sa propre politique.
+Ce site n'utilise aucun cookie et ne mesure pas sa fréquentation. Comme tout hébergeur, Netlify enregistre l'adresse IP des visiteurs pour faire fonctionner et protéger le site (notre intérêt légitime à assurer la sécurité du site). Netlify conserve ces journaux techniques pour une durée limitée. Les liens « Voir sur la carte » ouvrent le site OpenStreetMap, qui applique sa propre politique.
 
 *Dernière mise à jour : {{ site.privacyUpdated | default: "[DONNÉE À COMPLÉTER]" }}*
