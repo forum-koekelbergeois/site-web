@@ -12,8 +12,8 @@ Procédure du jour où le site complet remplace la page d'attente sur www.forumk
 
 ## Avant le jour J, sur la version de test
 
-1. Le formulaire a été testé de bout en bout sur la version de test : envoi réel, arrivée dans Netlify (Forms), e-mail de notification reçu, et « Répondre » adressé à la famille.
-2. Dans Netlify, la détection des formulaires est activée (réglages du site, rubrique Forms), et la notification par e-mail vers l'adresse du Forum est configurée.
+1. Le formulaire a été testé de bout en bout sur la version de test : envoi réel, arrivée dans Netlify (Forms), les deux e-mails de notification reçus, et « Répondre » adressé à la famille.
+2. Dans Netlify, la détection des formulaires est activée (réglages du site, rubrique Forms). Deux notifications par e-mail sont configurées et testées : vers fkoekelbergeois@koekelberg.brussels et vers asbl.forumkoekelbergeois@gmail.com.
 3. Les points [PROPOSITION À VALIDER] de NOTES-CONTENU.md ont été tranchés.
 4. Dernière relecture de la version de test sur téléphone.
 
@@ -87,7 +87,7 @@ Sur un téléphone et sur un ordinateur, en navigation privée :
 2. Le menu mène aux quatre pages : Accueil, Écoles de devoirs, Activités, Contact.
 3. La page Activités liste les ateliers à venir, et une page d'atelier affiche le numéro à appeler et le bouton « Laissez-nous un message ».
 4. « Laissez-nous un message » depuis un atelier ouvre le formulaire, avec « Une activité » et le nom de l'atelier déjà remplis.
-5. Le formulaire : envoyer un vrai message de test. Vérifier que la page Merci s'affiche, que le message apparaît dans Netlify (Forms) et que l'e-mail de notification arrive.
+5. Le formulaire : envoyer un vrai message de test. Vérifier que la page Merci s'affiche, que le message apparaît dans Netlify (Forms) et que les deux e-mails de notification arrivent, à fkoekelbergeois@koekelberg.brussels et à asbl.forumkoekelbergeois@gmail.com.
 6. Le numéro 02 435 68 45 se compose quand on le touche sur téléphone, et l'adresse e-mail ouvre la messagerie.
 7. La page Mentions légales et vie privée affiche la date de mise à jour, et le lien « Vie privée → » du formulaire y mène.
 8. https://www.forumkoekelbergeois.be/robots.txt contient `Allow: /` et la ligne `Sitemap:`.

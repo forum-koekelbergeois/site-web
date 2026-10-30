@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import images from "../src/_data/images.js";
 import { imageHtml, galleryHtml, findMissingImages, findMissingReferences } from "../lib/images.js";
 import { linkContacts, telHref } from "../lib/contact-links.js";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { homedir } from "node:os";
 
 // Reads the RIFF chunks of a WebP file: image size and metadata chunks.
 function webpInfo(path) {
@@ -37,6 +38,23 @@ const EXPECTED = ["IA1", "IA3", "IA4", "IA5", "IA6", "IA7", "IA8", "IA9", "IA11"
 
 test("every image of annex E has a slot, and only those", () => {
   assert.deepEqual(images.list.map((i) => i.code), EXPECTED);
+});
+
+// The content document lives outside the repository: this check runs only
+// where it is present (Aymeric's computer), never on Netlify.
+const CONTENT = `${homedir()}/Projets/contenu-site.md`;
+
+test("every alt text is word for word the one of annex E (E3 and E4)", { skip: !existsSync(CONTENT) && "contenu-site.md absent" }, () => {
+  const text = readFileSync(CONTENT, "utf8");
+  const annex = text.slice(text.indexOf("### E3"), text.indexOf("### E5"));
+  const expected = {};
+  for (const line of annex.split("\n")) {
+    const cells = line.split("|").map((c) => c.trim());
+    if (/^(IA|R)\d+$/.test(cells[1] ?? "")) expected[cells[1]] = cells.at(-2) === "(texte alternatif vide)" ? "" : cells.at(-2);
+  }
+  assert.ok(Object.keys(expected).length >= 40);
+  for (const image of images.list) assert.equal(image.alt, expected[image.code], image.code);
+  assert.deepEqual(Object.keys(expected).filter((code) => !images.byCode[code]), [], "annex images missing from the site");
 });
 
 test("decorative images have an empty alt, the others a text", () => {
